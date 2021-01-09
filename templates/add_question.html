@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new question</title>
+</head>
+<body>
+    <h1>Add new question</h1>
+    <form action="{{ url_for("save_question")}}" method="POST">
+        <label for="title">Title:</label><br>
+        <input name="title" id="title" type="text" minlength="5" maxlength="50" value="">
+        <br><br>
+        <label for="message">message:</label><br>
+        <input name="message" id="message" type="text" minlength="5" maxlength="50" value="">
+        <br><br>
+        <input type="submit" value="Add new question">
+    </form>
+</body>
+</html>

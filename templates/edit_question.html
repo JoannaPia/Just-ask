@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit existing question</title>
+</head>
+<body>
+    <h1>Edit existing question</h1>
+    <form action="{{ url_for("save_edited_question")}}" method="POST">
+        <label for="title">Title:</label><br>
+        <textarea name="title" id="title" type="text" minlength="5" maxlength="50">{{ question["title"] }}</textarea>
+        <br><br>
+        <label for="message">Message:</label><br>
+        <textarea name="message" id="message" minlength="5" maxlength="500">{{ question["message"] }}</textarea>
+        <br><br>
+        <input name="id" id="id" type="hidden" value= {{ question ["id"] }}>
+        <input type="submit" value="Update existing question">
+    </form>
+        <br>
+        <a href="{{ url_for("display_question", question_id=question["id"]) }}"> Go back to full info about question </a>
+        <br><br>
+        <a href="{{url_for('index')}}"> Go back to list of questions </a>
+</body>
+</html>

@@ -1,0 +1,7 @@
+id,submission_time,view_number,vote_number,title,message,image
+3,1493015432,1364,58,Drawing canvas with an image picked with Cordova Camera Plugin,I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS it throws errors such as cross origin issue or that I'm trying to use an unknown format,
+4,2021-1-9 10:51,0,4,testestes,testestes,0
+5,2021-1-9 10:56,0,6,testestes,testestestes,0
+6,2021-1-9 11:5,0,1,tatatata,tatatatat,0
+7,2021-1-9 11:6,0,1,tatatatatas,tatatata,0
+8,2021-1-9 13:34,0,3,message test,messsage test,0

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add answer</title>
+</head>
+<body>
+    <h1>Add answer</h1>
+    <form action="{{ url_for('save_answer', q_id=question_id) }}" method="POST">
+        <label for="message">Message:</label><br>
+        <input name="message" id="message" type="text" minlength="5" maxlength="100" value="">
+        <br><br><!--
+        <input name="question_id" id="question_id" type="hidden" value="{{answer_keys["question_id"]}}">
+        -->
+        <input type="submit" value="Add answer">
+    </form>
+</body>
+</html>
