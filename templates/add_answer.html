@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Add answer</title>
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
 </head>
-<body>
+<body style="background-color: #3A3B3C">
     <h1>Add answer</h1>
     <form action="{{ url_for('save_answer', q_id=question_id) }}" method="POST">
         <label for="message">Message:</label><br>
-        <input name="message" id="message" type="text" minlength="5" maxlength="100" value="">
-        <br><br><!--
-        <input name="question_id" id="question_id" type="hidden" value="{{answer_keys["question_id"]}}">
-        -->
-        <input type="submit" value="Add answer">
+        <textarea name="message" id="message" minlength="5" maxlength="500"></textarea>
+        <br><br>
+        <button class="button2" type="submit" value="Submit">Add answer</button>
     </form>
+        <br>
+    <a href="{{ url_for("display_question", question_id=question_id) }}"><button class="button1">Back without saving</button></a>
+                <br><br>
+        <a href="{{ url_for("index") }}"><button class="button3">Back to list of questions</button></a>
+        <br>
 </body>
 </html>
