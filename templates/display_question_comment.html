@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display question</title>
+    <link href="/static/css/style.css" rel="stylesheet">
+     <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
+</head>
+    <body>
+        <h1>Full info about question</h1>
+    <table>
+        <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>
+                        {{ headers_print[header] }}
+                    </th>
+                {%  endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {%  for question in question %}
+                    {% for header in headers %}
+                        <td>
+                            {% if header == "image" %}
+                                {#   <img src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100"> #}
+                            {% else %}
+                                {{ question[header] }}
+                            {% endif %}
+                        </td>
+                    {%  endfor %}
+                {% endfor %}
+                <td>
+                    <form id="upload_image_question" action="" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" accept="image/*">
+                    <input type="submit" value="Attach an image">
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        <br>
+            <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="button2">Edit question</button></a>
+            <a href="{{ url_for("delete_question", question_id=question) }}"><button class="button1">Delete question</button></a>
+            <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="button3">Add answer</button></a>
+        <br>
+        <h1>All Answers</h1>
+    <table>
+        <thead>
+            <tr>
+                {% for header in answers_headers %}
+                    <th>
+                        {{ header }}
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        UDALO SIE
+            {% for answer in answers %}
+                <tr>
+                    {% for header in answers_headers %}
+                        <td>
+                            {% if header == "image" %}
+                                {% for answer_image_name in answer_image_names %}
+                                    {% if "answer"+display_answer['id'] in answer_image_name %}
+                                        <img src="{{ url_for('static', filename='images/' + answer_image_name) }}" alt="Image not found" width="100" height="100">
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {{ answer[header] }}
+                            {%  endif %}
+                        </td>
+                    {% endfor %}
+                    <th>
+                        <a href="{{ url_for("delete_answer", answer_id=answer["id"]) }}"><button class="button2" type="submit" >Delete answer</button></a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for("vote_up_answers", answer_id=answer["id"]) }}"><button class="button1" type="submit">Vote up</button></a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for("vote_down_answers", answer_id=answer["id"]) }}"><button class="button3" type="submit">Vote down</button></a>
+                    </th>
+                    <th>
+                        <a href="{{ url_for("add_comment_answer", answer_id=answer["id"], question_id=question["id"]) }}"><button class="button3" type="submit">Dodaj komentarz</button></a>
+                    </th>
+                    <th>
+                        <form id="upload_image_answer" action="{{ url_for('upload_image_answer', question_id=question['id'], answer_id=answer['id']) }}" alt="No image attached" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="file" accept="image/*">
+                        <input type="submit" value="Attach an image">
+                        </form>
+                    </th>
+
+                </tr>
+                {% if %}
+                <tr>
+                    <form></form>
+                </tr>
+                {% else %}
+
+                {% endif %}
+
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+        <a href="{{ url_for("index") }}"><button class="button2">Back to the list of questions</button></a>
+    <br>
+</body>
+</html>

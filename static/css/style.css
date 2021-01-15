@@ -1,36 +1,187 @@
+body{
+    background-color: #36454F;
+    margin: 100px;
+}
+h1 {
+    font-size: 4em;
+    font-family: cursive;
+    /*font-weight: bold;*/
+    text-align: center;
+    text-shadow: 0 1px 0 #ccc,
+               0 2px 0 #c9c9c9,
+               0 3px 0 #bbb,
+               0 4px 0 #b9b9b9,
+               0 5px 0 #aaa,
+               0 6px 1px rgba(0,0,0,.1),
+               0 0 5px rgba(0,0,0,.1),
+               0 1px 3px rgba(0,0,0,.3),
+               0 3px 5px rgba(0,0,0,.2),
+               0 5px 10px rgba(0,0,0,.25),
+               0 10px 10px rgba(0,0,0,.2),
+               0 20px 20px rgba(0,0,0,.15);
+    background-color: #36454F;
+    color: white;
+    transition: 1s;
+}
+
+h1:hover{
+    font-size: 5em;
+    color: #C3B091;
+
+}
 
 .button1 {
-  background-color: orange;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+    background-color: rgba(242,59,28, 0.5);
+    padding: 15px 32px;
+    width: 120px;
+    height: 80px;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    margin: 5px;
+    color: #3A3431;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    background: linear-gradient(white, orange);
+    border-radius: 5px;
+    /*margin: 10px;*/
+    -pie-background: linear-gradient(white, orange);
+    behavior: url("PIE.htc");
+    transition: 1s;
+
 }
 
+.button1:hover{
+    cursor: pointer;
+    color: red;
+    opacity: 0.6;
+}
 
 .button2 {
-  background-color: darkcyan;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-}
+    background-color: rgba(242,59,28, 0.5);
+    padding: 15px 32px;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    color: #3A3431;
+    text-align: center;
+    margin: 5px;
+    font-size: 16px;
+    background: linear-gradient(white, darkcyan);
+    display: inline-block;
+    border-radius: 5px;
+    margin: 10px;
+    -pie-background: linear-gradient(white, darkcyan);
+    behavior: url("PIE.htc");
+    transition: 1s;
 
+}
+.button2:hover{
+    cursor: pointer;
+    color: red;
+    opacity: 0.6;
+}
 
 .button3 {
-  background-color: chocolate;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
+    background-color: rgba(242,59,28, 0.5);
+    padding: 15px 32px;
+    width: 120px;
+    height: 80px;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    color: #3A3431;
+    text-align: center;
+    margin: 5px;
+    font-size: 16px;
+    background: linear-gradient(white, chocolate);
+    display: inline-block;
+    border-radius: 5px;
+    margin: 10px;
+    -pie-background: linear-gradient(white, chocolate);
+    behavior: url("PIE.htc");
+    transition: 1s;
+
 }
+
+.button3:hover{
+    cursor: pointer;
+    color: red;
+    opacity: 0.6;
+}
+
+table
+{
+    margin: 10px;
+    border: none;
+    width: auto;
+    padding: 5px;
+    font-family: 'trebuchet MS';
+    color: #36454F;
+
+
+}
+table tr td:first-of-type
+{
+    font-weight: bold;
+}
+table tr td, table tr th
+{
+    padding: 8px;
+}
+table th
+{
+    background-color: #dce9f8;
+    background-image: linear-gradient(to top, #C6CECE, #dce9f8);
+    border-bottom: 2px solid #aaa;
+    font-size: 20px;
+    font-style: oblique;
+}
+table tr
+{
+    margin: 2px;
+    border-bottom: 1px solid #ccc;
+    font-size: 13px;
+}
+table tr:nth-child(odd)
+{
+    background-color: #f5f5f5;
+    transition: 1s;
+}
+
+
+table tr:hover .example {
+    display: block;
+}
+
+table td.button{
+    background-color: #36454F;
+    border: none;
+}
+table tr:hover {
+    background-color: #C6CECE;
+}
+a{
+    color: red;
+}
+
+#container{
+    border: 1px solid #36454F;
+    weight: 1000px;
+    height: 200px;
+}
+#container .menu_top{
+   clear: left;
+    float: left;
+    margin-top: 45px;
+    margin-left: 50px;
+
+
+}
+
+#container .menu_right{
+    clear: right;
+    float: right;
+    margin-top: 10px;
+    margin-right: 50px;
+
+
+
+
+
 

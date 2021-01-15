@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Just Ask!</title>
-    <link href="/static/css/style.css" rel="stylesheet">
-    <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
+    <link href="../static/css/style.css" rel="stylesheet">
+   <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
 </head>
-<body style="background-color: #3A3B3C">
+<body>
 <h1>Just Ask!</h1>
 <br>
+<div id="container">
+    <div class="menu_top">
 <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
-<br><br><br>
+</div>
+    <br><br><br>
+         </div>
+</div>
      <table>
         <thead>
             <tr>
@@ -40,11 +45,11 @@
                         {% endif %}
                     {% endfor %}
 
-                <td>
-                   <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="button1" type="submit">Vote up</button></a>
+                <td class="button">
+                   <a href="{{ url_for("vote_up_on_question", question_id=question["id"]) }}"><button class="button1" type="submit">Vote up</button></a>
                 </td>
-                <td>
-                    <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="button3" type="submit">Vote down</button></a>
+                <td class="button">
+                    <a href="{{ url_for("vote_down_on_question", question_id=question["id"]) }}"><button class="button3" type="submit">Vote down</button></a>
                 </td>
                 </tr>
             {% endfor %}

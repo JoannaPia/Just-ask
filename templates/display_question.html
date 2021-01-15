@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <title>Display question</title>
     <link href="/static/css/style.css" rel="stylesheet">
-    <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
+     <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
 </head>
-    <body style="background-color: #3A3B3C">
+    <body>
         <h1>Full info about question</h1>
     <table>
         <thead>
             <tr>
-                {% for key in headers_print %}
+                {% for header in headers %}
                     <th>
-                        {{ headers_print[key] }}
+                        {{ headers_print[header] }}
                     </th>
                 {%  endfor %}
             </tr>
@@ -41,21 +41,17 @@
         </tbody>
     </table>
         <br>
-            <a href="{{url_for("edit_question", question_id=question["id"]) }}"><button class="button2">Edit question</button></a>
-            <a href="{{url_for("delete_question", question_id=question["id"]) }}"><button class="button1">Delete question</button></a>
-            <a href="{{url_for("add_answer", question_id=question["id"]) }}"><button class="button3">Add answer</button></a>
+            <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="button2">Edit question</button></a>
+            <a href="{{ url_for("delete_question", question_id=question) }}"><button class="button1">Delete question</button></a>
+            <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="button3">Add answer</button></a>
         <br>
         <h1>All Answers</h1>
-        {% if answers == [] %}
-            There are no answers to this question yet
-            <br><br>
-        {% else %}
     <table>
         <thead>
             <tr>
-                {% for key in answers_headers %}
+                {% for header in answers_headers %}
                     <th>
-                        {{ answers_headers[key] }}
+                        {{ header }}
                     </th>
                 {% endfor %}
             </tr>
@@ -86,16 +82,19 @@
                         <a href="{{ url_for("vote_down_answers", answer_id=answer["id"]) }}"><button class="button3" type="submit">Vote down</button></a>
                     </th>
                     <th>
+                        <a href="{{ url_for("add_comment_answer", question_id=question["id"], answer_id=answer["id"]) }}"><button class="button3" type="submit">Add comment</button></a>
+                    </th>
+                    <th>
                         <form id="upload_image_answer" action="{{ url_for('upload_image_answer', question_id=question['id'], answer_id=answer['id']) }}" alt="No image attached" method="POST" enctype="multipart/form-data">
                         <input type="file" name="file" accept="image/*">
                         <input type="submit" value="Attach an image">
                         </form>
                     </th>
+
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-        {% endif %}
     <br>
         <a href="{{ url_for("index") }}"><button class="button2">Back to the list of questions</button></a>
     <br>
