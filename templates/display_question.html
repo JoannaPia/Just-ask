@@ -11,16 +11,15 @@
     <table>
         <thead>
             <tr>
-                {% for header in headers %}
+                {% for key in headers_print %}
                     <th>
-                        {{ headers_print[header] }}
+                        {{ headers_print[key] }}
                     </th>
                 {%  endfor %}
             </tr>
         </thead>
         <tbody>
             <tr>
-                {%  for question in question %}
                     {% for header in headers %}
                         <td>
                             {% if header == "image" %}
@@ -30,7 +29,6 @@
                             {% endif %}
                         </td>
                     {%  endfor %}
-                {% endfor %}
                 <td>
                     <form id="upload_image_question" action="" method="POST" enctype="multipart/form-data">
                     <input type="file" name="file" accept="image/*">
@@ -39,19 +37,23 @@
                 </td>
             </tr>
         </tbody>
-    </table>
+        </table>
         <br>
             <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="button2">Edit question</button></a>
             <a href="{{ url_for("delete_question", question_id=question) }}"><button class="button1">Delete question</button></a>
             <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="button3">Add answer</button></a>
         <br>
         <h1>All Answers</h1>
-    <table>
+        {% if answers == [] %}
+            There are no answers to this question yet
+            <br><br>
+        {% else %}
+        <table>
         <thead>
             <tr>
-                {% for header in answers_headers %}
+                {% for key in answers_headers %}
                     <th>
-                        {{ header }}
+                        {{ answers_headers[key] }}
                     </th>
                 {% endfor %}
             </tr>
@@ -95,7 +97,8 @@
             {% endfor %}
         </tbody>
     </table>
-    <br>
+    {% endif %}
+        <br>
         <a href="{{ url_for("index") }}"><button class="button2">Back to the list of questions</button></a>
     <br>
 </body>

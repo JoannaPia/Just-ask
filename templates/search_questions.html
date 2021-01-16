@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Just Ask!</title>
-    <link href="../static/css/style.css" rel="stylesheet">
-   <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
 </head>
-<body>
+<body style="background-color: #3A3B3C">
 <h1>Just Ask!</h1>
-    <form action="/search/" method=post>
-        <input id="search-phrase" type="text" placeholder="Search ..." name ="search_phrase">
-        <button type="submit">Search</button>
-    </form>
+{% if questions != [] %}
 <br>
-<div id="container">
-    <div class="menu_top">
 <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
-</div>
-    <br><br><br>
-         </div>
-</div>
+<br><br>
+Questions which in their content or in the content of the answers contain the searched phrase
+<br><br>
      <table>
         <thead>
             <tr>
@@ -48,17 +42,16 @@
                             </td>
                         {% endif %}
                     {% endfor %}
-
-                <td class="button">
-                   <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="button1" type="submit">Vote up</button></a>
-                </td>
-                <td class="button">
-                    <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="button3" type="submit">Vote down</button></a>
-                </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
+{% else %}
+    There are no questions or answers containing the given phrase
+    <br><br>
+{% endif %}
+    <br>
+        <a href="{{ url_for("index") }}"><button class="button2">Back to the list of questions</button></a>
+    <br>
 </body>
 </html>

@@ -17,6 +17,7 @@ def get_all_questions(cursor: RealDictCursor) -> dict:
     query = """
             SELECT id, submission_time, view_number, vote_number, title
             FROM question
+            ORDER BY submission_time
             """
     cursor.execute(query)
     questions = cursor.fetchall()
@@ -140,3 +141,43 @@ def vote_down_answer(cursor: RealDictCursor, answer_id):
     cursor.execute(command, param)
 
     return vote_n['question_id']
+
+@database_common.connection_handler
+def vote_up_question(cursor: RealDictCursor, id):
+    query="""
+    UPDATE question
+    SET vote_number = vote_number + 1
+    WHERE id=%(id)s
+    """
+    param = {'id': id}
+    cursor.execute(query, param)
+    return None
+
+@database_common.connection_handler
+def vote_down_question(cursor: RealDictCursor, id):
+    query="""
+    UPDATE question
+    SET vote_number = vote_number - 1
+    WHERE id=%(id)s
+    """
+    param = {'id': id}
+    cursor.execute(query, param)
+    return None
+
+@database_common.connection_handler
+def search(cursor: RealDictCursor, search_phrase):
+    query = """
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title
+    FROM question
+    INNER JOIN answer
+        ON question.id = answer.question_id
+    WHERE (title ILIKE %(search_phrase)s) or (question.message ILIKE %(search_phrase)s) or (answer.message ILIKE %(search_phrase)s)
+    UNION
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title
+    FROM question
+    WHERE (title ILIKE %(search_phrase)s) or (message ILIKE %(search_phrase)s);
+    """
+    param = {'search_phrase': f'%{search_phrase}%'}
+    cursor.execute(query, param)
+    print("a")
+    return cursor.fetchall()
