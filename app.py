@@ -104,16 +104,14 @@ def upload_image_answer(answer_id, question_id):
 def vote_up_on_question(question_id, table):
     if table == "question":
         data_manager.vote_up_question(id=question_id)
-    questions = data_manager.get_all_questions()
-    return render_template("index.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
+    return redirect(url_for('index'))
 
 
 @app.route('/vote-down/<int:question_id>/<table>')
 def vote_down_on_question(question_id, table):
     if table == "question":
         data_manager.vote_down_question(id=question_id)
-    questions = data_manager.get_all_questions()
-    return render_template("index.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
+    return redirect(url_for('index'))
 
 
 @app.route('/edit_question')
