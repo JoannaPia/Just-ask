@@ -5,12 +5,14 @@
     <title>Just Ask!</title>
     <link href="../static/css/style.css" rel="stylesheet">
    <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
+    <script type = "text/javascript"
+         src = "{{ url_for('static', filename = 'comment_question.js') }}" ></script>
 </head>
 <body>
 <h1>Just Ask!</h1>
     <form action="/search/" method=post>
         <input id="search-phrase" type="text" placeholder="Search ..." name ="search_phrase">
-        <button type="submit">Search</button>
+        <button class="button1" type="submit">Search</button>
     </form>
 <br>
 <div id="container">
@@ -59,6 +61,5 @@
             {% endfor %}
         </tbody>
     </table>
-
 </body>
 </html>

@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Display question</title>
     <link href="/static/css/style.css" rel="stylesheet">
-     <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
+    <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
+ <script type = "text/javascript"
+         src = "{{ url_for('static', filename = 'comment_answer.js') }}" ></script>
 </head>
     <body>
         <h1>Full info about question</h1>
@@ -51,9 +53,9 @@
         <table>
         <thead>
             <tr>
-                {% for key in answers_headers %}
+                {% for header in answers_headers %}
                     <th>
-                        {{ answers_headers[key] }}
+                        {{ header }}
                     </th>
                 {% endfor %}
             </tr>
@@ -74,6 +76,11 @@
                             {%  endif %}
                         </td>
                     {% endfor %}
+                </tr>
+                <tr>
+                    <th>
+                        <a href="{{ url_for("edit_answer",answer_id=answer["id"]) }}"><button class="button2" type="submit" >Edit answer</button></a>
+                    </th>
                     <th>
                         <a href="{{ url_for("delete_answer", answer_id=answer["id"]) }}"><button class="button2" type="submit" >Delete answer</button></a>
                     </th>
@@ -84,7 +91,10 @@
                         <a href="{{ url_for("vote_down_answers", answer_id=answer["id"]) }}"><button class="button3" type="submit">Vote down</button></a>
                     </th>
                     <th>
-                        <a href="{{ url_for("add_comment_answer", question_id=question["id"], answer_id=answer["id"]) }}"><button class="button3" type="submit">Add comment</button></a>
+                        <button class="button3" onClick="showComment({{ answer["id"] }})">Add comment</button>
+                    </th>
+                    <th>
+                        <button class="button3" onClick="showComments({{ answer["id"] }})">Show comments</button>
                     </th>
                     <th>
                         <form id="upload_image_answer" action="{{ url_for('upload_image_answer', question_id=question['id'], answer_id=answer['id']) }}" alt="No image attached" method="POST" enctype="multipart/form-data">
@@ -92,14 +102,35 @@
                         <input type="submit" value="Attach an image">
                         </form>
                     </th>
-
                 </tr>
+                <table id="comments{{ answer['id'] }}" style='display:none;'>
+                {% for comment in comments %}
+                    {% if comment['answer_id'] == answer['id'] %}
+                        <tr>
+                            <th>
+                                {{ comment['message'] }}
+                            </th>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </table>
+                <div id="comment{{ answer['id'] }}" style='display:none;'>
+
+                       <form action="{{ url_for('save_comment_answer', answer_id=answer['id']) }}" method="POST">
+                            <label for="message">Comment:</label><br>
+                            <textarea name="message" id="message" minlength="5" rows="4" cols="50" maxlength="500"></textarea>
+                            <br><br>
+                            <button class="button2" type="submit" value="Submit">Add comment</button>
+                        </form>
+
+                </div>
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
         <br>
         <a href="{{ url_for("index") }}"><button class="button2">Back to the list of questions</button></a>
+
     <br>
 </body>
 </html>

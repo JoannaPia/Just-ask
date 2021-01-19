@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
     <title>Display question</title>
     <link href="/static/css/style.css" rel="stylesheet">
      <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
@@ -57,7 +58,6 @@
             </tr>
         </thead>
         <tbody>
-        UDALO SIE
             {% for answer in answers %}
                 <tr>
                     {% for header in answers_headers %}
@@ -83,7 +83,7 @@
                         <a href="{{ url_for("vote_down_answers", answer_id=answer["id"]) }}"><button class="button3" type="submit">Vote down</button></a>
                     </th>
                     <th>
-                        <a href="{{ url_for("add_comment_answer", answer_id=answer["id"], question_id=question["id"]) }}"><button class="button3" type="submit">Dodaj komentarz</button></a>
+                        <a href="{{ url_for("add_comment_answer", answer_id=answer['id'], question_id=question['id']) }}"><button class="button3" type="submit">Add comment</button></a>
                     </th>
                     <th>
                         <form id="upload_image_answer" action="{{ url_for('upload_image_answer', question_id=question['id'], answer_id=answer['id']) }}" alt="No image attached" method="POST" enctype="multipart/form-data">
@@ -91,16 +91,18 @@
                         <input type="submit" value="Attach an image">
                         </form>
                     </th>
-
                 </tr>
-                {% if %}
+                {% if answer_id == answer['id'] %}
                 <tr>
-                    <form></form>
+                    <form method="POST">
+                    <label for="add_comment"></label>
+                    <textarea name="add_comment" id="add_comment"></textarea>
+                <button type="submit">Add comment</button>
+                    </form>
                 </tr>
                 {% else %}
-
+                    {{ None }}
                 {% endif %}
-
             {% endfor %}
         </tbody>
     </table>

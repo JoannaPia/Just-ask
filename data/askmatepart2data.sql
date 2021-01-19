@@ -56,14 +56,6 @@ CREATE TABLE comment_q (
     edited_count integer
 );
 
-DROP TABLE IF EXISTS public.comment_a;
-CREATE TABLE comment_a (
-    id serial NOT NULL,
-    answer_id integer,
-    message text,
-    submission_time timestamp without time zone,
-    edited_count integer
-);
 
 DROP TABLE IF EXISTS public.question_tag;
 CREATE TABLE question_tag (

@@ -42,7 +42,7 @@ h1:hover{
     display: inline-block;
     font-size: 16px;
     background: linear-gradient(white, orange);
-    border-radius: 5px;
+    border-radius: 20px;
     /*margin: 10px;*/
     -pie-background: linear-gradient(white, orange);
     behavior: url("PIE.htc");
@@ -66,7 +66,7 @@ h1:hover{
     font-size: 16px;
     background: linear-gradient(white, darkcyan);
     display: inline-block;
-    border-radius: 5px;
+    border-radius: 20px;
     margin: 10px;
     -pie-background: linear-gradient(white, darkcyan);
     behavior: url("PIE.htc");
@@ -91,7 +91,7 @@ h1:hover{
     font-size: 16px;
     background: linear-gradient(white, chocolate);
     display: inline-block;
-    border-radius: 5px;
+    border-radius: 20px;
     margin: 10px;
     -pie-background: linear-gradient(white, chocolate);
     behavior: url("PIE.htc");
@@ -112,6 +112,7 @@ table
     width: auto;
     padding: 5px;
     font-family: 'trebuchet MS';
+
     color: #36454F;
 
 
@@ -137,12 +138,15 @@ table tr
     margin: 2px;
     border-bottom: 1px solid #ccc;
     font-size: 13px;
-}
-table tr:nth-child(odd)
-{
     background-color: #f5f5f5;
     transition: 1s;
 }
+
+/*table tr:nth-child(odd)
+{
+    background-color: #f5f5f5;
+    transition: 1s;
+}*/
 
 
 table tr:hover .example {

@@ -6,8 +6,7 @@ import data_manager
 HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
                  "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
 QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-ANSWERS_HEADERS = {"id": "Answer ID", "submission_time": "Submission time", "vote_number": "Vote number",
-                   "question_id": "Question ID", "message": "Message", "image": "Image"}
+ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -39,10 +38,9 @@ def save_question():
 def display_question(question_id):
     question = data_manager.get_question(question_id)
     answers = data_manager.get_answers(question_id)
-    print("a")
+    comments = data_manager.get_comments(question_id)
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
-                           answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT)
-
+                           answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT, comments=comments)
 
 @app.route('/<int:question_id>/', methods=['GET'])
 def display_question_comment(question_id):
@@ -58,9 +56,8 @@ def save_answer(q_id):
     data_manager.add_answer(data_manager.data_time_now(), '0', q_id, message, str(0))
     return redirect(url_for('display_question', question_id=q_id))
 
-@app.route('/<int:question_id>/new_answer')
+@app.route('/<int:question_id>/new-answer')
 def add_answer(question_id):
-
     return render_template('add_answer.html', question_id=question_id)
 
 
@@ -71,7 +68,6 @@ def delete_question(question_id):
 
 @app.route('/answer/<int:answer_id>/delete')
 def delete_answer(answer_id):
-
     question_id = data_manager.delete_answer(answer_id)
     return redirect(url_for('display_question', question_id=question_id))
 
@@ -87,37 +83,47 @@ def vote_down_answers(answer_id):
     return redirect(url_for('display_question', question_id=question_id))
 
 
-@app.route('/<int:question_id>/<int:answer_id>/new-comment')
-def add_comment_answer(question_id, answer_id):
-    return redirect(url_for('display_question_comment', question_id=question_id))
-
-@app.route('/<int:answer_id>/save-comment')
+@app.route('/<int:answer_id>/save-comment', methods=['POST'])
 def save_comment_answer(answer_id):
+    message = request.form['message']
+    q_id = data_manager.save_comment_answer(answer_id, message)
+    return redirect(url_for('display_question', question_id=q_id))
+
+@app.route('/<int:question_id>/save-comment', methods=['POST'])
+def save_comment_question(question_id):
     pass
+
+
+@app.route('/answer/<int:answer_id>/edit', methods=['GET'])
+def edit_answer(answer_id):
+    answer = data_manager.get_answer(answer_id)
+    print(answer['message'])
+    return render_template('edit_answer.html', question_id=answer['question_id'],
+                           answer_id=answer_id, answer=answer)
+
+@app.route('/answer/<int:answer_id>/save_edit_answer', methods=['POST'])
+def save_edit_answer(answer_id):
+    message = request.form['message']
+    q_id = data_manager.save_edit_answer(answer_id, message)
+    return redirect(url_for('display_question', question_id=q_id))
 
 @app.route('/<int:answer_id>/vote-down')
 def upload_image_answer(answer_id, question_id):
     pass
 
-
-@app.route('/vote-up/<int:question_id>/<table>')
-def vote_up_on_question(question_id, table):
-    if table == "question":
-        data_manager.vote_up_question(id=question_id)
-    return redirect(url_for('index'))
+@app.route('/<int:question_id>/vote-up')
+def vote_up_on_question(question_id):
+    pass
 
 
-@app.route('/vote-down/<int:question_id>/<table>')
-def vote_down_on_question(question_id, table):
-    if table == "question":
-        data_manager.vote_down_question(id=question_id)
-    return redirect(url_for('index'))
+@app.route('/<int:question_id>/vote-down')
+def vote_down_on_question(question_id):
+    pass
 
 
 @app.route('/edit_question')
 def edit_question(question_id):
     pass
-
 
 @app.route("/search/", methods=["GET", "POST"])
 def search_phrase():

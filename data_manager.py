@@ -17,7 +17,6 @@ def get_all_questions(cursor: RealDictCursor) -> dict:
     query = """
             SELECT id, submission_time, view_number, vote_number, title
             FROM question
-            ORDER BY submission_time
             """
     cursor.execute(query)
     questions = cursor.fetchall()
@@ -63,6 +62,33 @@ def get_answers(cursor: RealDictCursor, question_id):
     cursor.execute(query, param)
     return cursor.fetchall()
 
+@database_common.connection_handler
+def get_answer_question_id(cursor: RealDictCursor, answer_id):
+    query = """
+        SELECT question_id
+        From answer
+        WHERE id = %(answer_id)s;
+    """
+
+    param = {'answer_id': answer_id}
+
+    cursor.execute(query, param)
+    result = cursor.fetchone()
+    return result['question_id']
+
+@database_common.connection_handler
+def get_answer(cursor: RealDictCursor, answer_id):
+    query = """
+        SELECT *
+        From answer
+        WHERE id = %(answer_id)s;
+    """
+
+    param = {'answer_id': answer_id}
+
+    cursor.execute(query, param)
+    result = cursor.fetchone()
+    return result
 
 @database_common.connection_handler
 def add_answer(cursor: RealDictCursor, sub, vote_n, question_id, mess, image):
@@ -127,7 +153,7 @@ def vote_down_answer(cursor: RealDictCursor, answer_id):
     cursor.execute(query)
     vote_n = cursor.fetchone()
 
-    new_vote_number = vote_n['vote_number'] - 1
+    new_vote_number = vote_n['vote_number']-1
 
     command = """
     UPDATE answer 
@@ -143,26 +169,56 @@ def vote_down_answer(cursor: RealDictCursor, answer_id):
     return vote_n['question_id']
 
 @database_common.connection_handler
-def vote_up_question(cursor: RealDictCursor, id):
-    query="""
-    UPDATE question
-    SET vote_number = vote_number + 1
-    WHERE id=%(id)s
-    """
-    param = {'id': id}
-    cursor.execute(query, param)
-    return None
+def save_comment_answer(cursor: RealDictCursor, answer_id, message):
+    query_max_id = """
+                    SELECT MAX(id) FROM comment
+                    """
+    cursor.execute(query_max_id)
+    new_id = cursor.fetchone()
+
+    if new_id['max']:
+        id_comment = new_id['max']
+    else:
+        id_comment = 1
+
+    edited_count = 0
+    sub_t =  data_time_now()
+    question_id = get_answer_question_id(answer_id)
+
+    query = "INSERT INTO comment " \
+            "VALUES ({},{},{},'{}','{}',{})".format(id_comment+1, question_id, answer_id, message, sub_t, edited_count)
+
+    cursor.execute(query)
+    return question_id
 
 @database_common.connection_handler
-def vote_down_question(cursor: RealDictCursor, id):
-    query="""
-    UPDATE question
-    SET vote_number = vote_number - 1
-    WHERE id=%(id)s
+def get_comments(cursor: RealDictCursor, question_id):
+    query = """
+    SELECT * from comment WHERE question_id = %(question_id)s
     """
-    param = {'id': id}
-    cursor.execute(query, param)
-    return None
+    params = {
+        'question_id': question_id
+    }
+    cursor.execute(query, params)
+    com_dict = cursor.fetchall()
+
+    return com_dict
+
+
+@database_common.connection_handler
+def save_edit_answer(cursor: RealDictCursor, answer_id, message):
+    command = """
+        UPDATE answer 
+        SET message = (%(message)s)
+        WHERE id=%(answer_id)s 
+        """
+    param = {
+        'message': str(message),
+        'answer_id': str(answer_id)
+    }
+    cursor.execute(command, param)
+    q_id = get_answer_question_id(answer_id)
+    return q_id
 
 @database_common.connection_handler
 def search(cursor: RealDictCursor, search_phrase):
@@ -179,5 +235,5 @@ def search(cursor: RealDictCursor, search_phrase):
     """
     param = {'search_phrase': f'%{search_phrase}%'}
     cursor.execute(query, param)
-    print("a")
     return cursor.fetchall()
+
