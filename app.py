@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect
 import os
 import data_manager
+import re
 
 
 HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
@@ -130,7 +131,9 @@ def search_phrase():
     if request.method == 'POST':
         search_phrase = request.form['search_phrase']
         search_question = data_manager.search(search_phrase)
-    return render_template("search_questions.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=search_question)
+        answers = data_manager.get_all_answers()
+    return render_template("search_questions.html",re=re, headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT,
+                           questions=search_question, search_phrase=search_phrase, answers=answers)
 
 
 if __name__ == '__main__':

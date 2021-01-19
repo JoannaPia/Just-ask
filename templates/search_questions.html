@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +7,20 @@
     <link href="/static/css/style.css" rel="stylesheet">
     <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
 </head>
-<body>
+<body style="background-color: #3A3B3C">
 <h1>Just Ask!</h1>
 {% if questions != [] %}
 <br>
 <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
 <br><br>
-Questions which in their content or in the content of the answers contain the searched phrase
+    Questions which in their content or in the content of the answers contain the searched phrase
 <br><br>
      <table>
         <thead>
             <tr>
                 {% for header in headers %}
                 {% if header == "submission_time" or header == "view_number"
-                        or header == "vote_number" or header == "title" %}
+                        or header == "vote_number" or header == "title" or header == "message"%}
                         <th>
                             {{ headers_print[header] }}
                         </th>
@@ -32,10 +33,26 @@ Questions which in their content or in the content of the answers contain the se
                 <tr>
                     {%  for header in headers %}
                         {% if header == "submission_time" or header == "view_number"
-                            or header == "vote_number" or header == "title" %}
+                            or header == "vote_number" or header == "title" or header == "message" %}
                             <td>
                                 {% if header == "title" %}
-                                    <a href="{{ url_for("display_question", question_id=question["id"]) }}">{{ question[header] }}</a>
+                                        <a href="{{ url_for("display_question", question_id=question["id"]) }}">
+                                            {% for text in re.split('[ ]', question[header]) %}
+                                                {% if search_phrase.lower() in text.lower()  %}
+                                                    <mark>{{text}}</mark>
+                                                {% else %}
+                                                    {{ text }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </a>
+                                {% elif  header == "message" %}
+                                        {% for text in re.split('[ ]', question[header]) %}
+                                                {% if search_phrase.lower() in text.lower()  %}
+                                                    <mark>{{text}}</mark>
+                                                {% else %}
+                                                    {{ text }}
+                                                {% endif %}
+                                        {% endfor %}
                                 {%  else %}
                                     {{ question[header] }}
                                 {% endif %}
@@ -43,6 +60,25 @@ Questions which in their content or in the content of the answers contain the se
                         {% endif %}
                     {% endfor %}
                 </tr>
+                {% for answer in answers %}
+                    <tr>
+                        {%  if answer["question_id"] == question["id"] and search_phrase in answer["message"]%}
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Answer message</td>
+                                <td>
+                                    {% for text in re.split('[ ]', answer["message"]) %}
+                                                {% if search_phrase.lower() in text.lower()  %}
+                                                    <mark>{{text}}</mark>
+                                                {% else %}
+                                                    {{ text }}
+                                                {% endif %}
+                                    {% endfor %}
+                                </td>
+                        {%  endif %}
+                    </tr>
+                {%  endfor %}
             {% endfor %}
         </tbody>
     </table>

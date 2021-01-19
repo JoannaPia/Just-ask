@@ -223,13 +223,13 @@ def save_edit_answer(cursor: RealDictCursor, answer_id, message):
 @database_common.connection_handler
 def search(cursor: RealDictCursor, search_phrase):
     query = """
-    SELECT question.id,question.submission_time,view_number, question.vote_number,title
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
     FROM question
     INNER JOIN answer
         ON question.id = answer.question_id
     WHERE (title ILIKE %(search_phrase)s) or (question.message ILIKE %(search_phrase)s) or (answer.message ILIKE %(search_phrase)s)
     UNION
-    SELECT question.id,question.submission_time,view_number, question.vote_number,title
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
     FROM question
     WHERE (title ILIKE %(search_phrase)s) or (message ILIKE %(search_phrase)s);
     """
@@ -237,3 +237,12 @@ def search(cursor: RealDictCursor, search_phrase):
     cursor.execute(query, param)
     return cursor.fetchall()
 
+@database_common.connection_handler
+def get_all_answers(cursor: RealDictCursor):
+    query = """
+    SELECT question_id, message
+    FROM answer
+    """
+    cursor.execute(query)
+    answers = cursor.fetchall()
+    return answers
