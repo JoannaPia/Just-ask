@@ -41,7 +41,7 @@ def display_question(question_id):
     answers = data_manager.get_answers(question_id)
     comments = data_manager.get_comments(question_id)
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
-                           answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT, comments=comments)
+                           answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT, comments=comments, question_id=question_id)
 
 @app.route('/<int:question_id>/', methods=['GET'])
 def display_question_comment(question_id):
@@ -62,9 +62,11 @@ def add_answer(question_id):
     return render_template('add_answer.html', question_id=question_id)
 
 
-@app.route('/delete_question')
+@app.route('/delete_question/<int:question_id>/')
 def delete_question(question_id):
-    pass
+    print("a")
+    data_manager.delete_question(question_id)
+    return redirect(url_for('index'))
 
 
 @app.route('/answer/<int:answer_id>/delete')
@@ -112,19 +114,38 @@ def save_edit_answer(answer_id):
 def upload_image_answer(answer_id, question_id):
     pass
 
-@app.route('/<int:question_id>/vote-up')
-def vote_up_on_question(question_id):
-    pass
+
+@app.route('/vote-up/<int:question_id>/<table>')
+def vote_up_on_question(question_id, table):
+    if table == "question":
+        data_manager.vote_up_question(id=question_id)
+    questions = data_manager.get_all_questions()
+    return redirect(url_for('index'))
 
 
-@app.route('/<int:question_id>/vote-down')
-def vote_down_on_question(question_id):
-    pass
+@app.route('/vote-down/<int:question_id>/<table>')
+def vote_down_on_question(question_id, table):
+    if table == "question":
+        data_manager.vote_down_question(id=question_id)
+    questions = data_manager.get_all_questions()
+    return redirect(url_for('index'))
 
 
-@app.route('/edit_question')
+@app.route('/edit_question/<int:question_id>/edit', methods=['GET'])
 def edit_question(question_id):
-    pass
+    question = data_manager.get_question(question_id)
+    return render_template('edit_question.html', question_id=question['id'],
+                           question=question)
+
+@app.route('/edit_question/<int:question_id>/edit', methods=['POST'])
+def save_edited_question(question_id):
+    title = request.form['title']
+    message = request.form['message']
+    question_id = question_id
+    data_manager.save_edit_question(question_id, message, title)
+    print("a")
+    return redirect(url_for('display_question', question_id=question_id))
+
 
 @app.route("/search/", methods=["GET", "POST"])
 def search_phrase():

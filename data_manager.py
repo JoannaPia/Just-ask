@@ -17,6 +17,7 @@ def get_all_questions(cursor: RealDictCursor) -> dict:
     query = """
             SELECT id, submission_time, view_number, vote_number, title
             FROM question
+            ORDER by submission_time
             """
     cursor.execute(query)
     questions = cursor.fetchall()
@@ -221,6 +222,21 @@ def save_edit_answer(cursor: RealDictCursor, answer_id, message):
     return q_id
 
 @database_common.connection_handler
+def save_edit_question(cursor: RealDictCursor, question_id, message, title):
+    command = """
+        UPDATE question 
+        SET message = (%(message)s), title = (%(title)s)
+        WHERE id=%(question_id)s 
+        """
+    param = {
+        'message': str(message),
+        'title' : str(title),
+        'question_id': str(question_id)
+    }
+    cursor.execute(command, param)
+    return None
+
+@database_common.connection_handler
 def search(cursor: RealDictCursor, search_phrase):
     query = """
     SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
@@ -246,3 +262,43 @@ def get_all_answers(cursor: RealDictCursor):
     cursor.execute(query)
     answers = cursor.fetchall()
     return answers
+
+@database_common.connection_handler
+def vote_up_question(cursor: RealDictCursor, id):
+    query="""
+    UPDATE question
+    SET vote_number = vote_number + 1
+    WHERE id=%(id)s
+    """
+    param = {'id': id}
+    cursor.execute(query, param)
+    return None
+
+@database_common.connection_handler
+def vote_down_question(cursor: RealDictCursor, id):
+    query="""
+    UPDATE question
+    SET vote_number = vote_number - 1
+    WHERE id=%(id)s
+    """
+    param = {'id': id}
+    cursor.execute(query, param)
+    return None
+
+@database_common.connection_handler
+def delete_question(cursor:RealDictCursor, question_id):
+    command1 = """
+            DELETE
+            FROM answer
+            WHERE question_id=%(id)s
+    """
+    command2 = """
+            DELETE
+            FROM question 
+            WHERE id=%(id)s    
+    """
+    param = { "id" : question_id }
+    cursor.execute(command1, param)
+    cursor.execute(command2, param)
+    print(question_id)
+    return None
