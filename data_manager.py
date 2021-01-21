@@ -17,6 +17,7 @@ def get_all_questions(cursor: RealDictCursor) -> dict:
     query = """
             SELECT id, submission_time, view_number, vote_number, title
             FROM question
+            ORDER BY submission_time
             """
     cursor.execute(query)
     questions = cursor.fetchall()
@@ -302,13 +303,13 @@ def save_edit_question(cursor: RealDictCursor, question_id, message, title):
 @database_common.connection_handler
 def search(cursor: RealDictCursor, search_phrase):
     query = """
-    SELECT question.id,question.submission_time,view_number, question.vote_number,title
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
     FROM question
     INNER JOIN answer
         ON question.id = answer.question_id
     WHERE (title ILIKE %(search_phrase)s) or (question.message ILIKE %(search_phrase)s) or (answer.message ILIKE %(search_phrase)s)
     UNION
-    SELECT question.id,question.submission_time,view_number, question.vote_number,title
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
     FROM question
     WHERE (title ILIKE %(search_phrase)s) or (message ILIKE %(search_phrase)s);
     """
