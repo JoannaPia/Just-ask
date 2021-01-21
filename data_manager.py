@@ -17,7 +17,6 @@ def get_all_questions(cursor: RealDictCursor) -> dict:
     query = """
             SELECT id, submission_time, view_number, vote_number, title
             FROM question
-            ORDER by submission_time
             """
     cursor.execute(query)
     questions = cursor.fetchall()
@@ -76,6 +75,21 @@ def get_answer_question_id(cursor: RealDictCursor, answer_id):
     cursor.execute(query, param)
     result = cursor.fetchone()
     return result['question_id']
+
+@database_common.connection_handler
+def get_question_id(cursor: RealDictCursor, question_id):
+    query = """
+        SELECT id
+        From question
+        WHERE id = %(question_id)s;
+    """
+
+    param = {'question_id': question_id}
+
+    cursor.execute(query, param)
+    result = cursor.fetchone()
+    print(result)
+    return result['id']
 
 @database_common.connection_handler
 def get_answer(cursor: RealDictCursor, answer_id):
@@ -205,6 +219,41 @@ def get_comments(cursor: RealDictCursor, question_id):
 
     return com_dict
 
+@database_common.connection_handler
+def save_comment_question(cursor: RealDictCursor, question_id, message):
+    query_max_id = """
+                    SELECT MAX(id) FROM comment_q
+                    """
+    cursor.execute(query_max_id)
+    new_id = cursor.fetchone()
+
+    if new_id['max']:
+        id_comment = new_id['max']
+    else:
+        id_comment = 1
+
+    edited_count = 0
+    sub_t = data_time_now()
+    question_id = get_question_id(question_id)
+
+    query = "INSERT INTO comment_q " \
+            "VALUES ({},{},'{}','{}',{})".format(id_comment+1, question_id, message, sub_t, edited_count)
+    print(message)
+    cursor.execute(query)
+    return question_id
+
+@database_common.connection_handler
+def get_comments_q(cursor: RealDictCursor, question_id):
+    query = """
+    SELECT * from comment_q WHERE question_id = %(question_id)s
+    """
+    params = {
+        'question_id': question_id
+    }
+    cursor.execute(query, params)
+    com_dict = cursor.fetchall()
+
+    return com_dict
 
 @database_common.connection_handler
 def save_edit_answer(cursor: RealDictCursor, answer_id, message):
@@ -239,13 +288,13 @@ def save_edit_question(cursor: RealDictCursor, question_id, message, title):
 @database_common.connection_handler
 def search(cursor: RealDictCursor, search_phrase):
     query = """
-    SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title
     FROM question
     INNER JOIN answer
         ON question.id = answer.question_id
     WHERE (title ILIKE %(search_phrase)s) or (question.message ILIKE %(search_phrase)s) or (answer.message ILIKE %(search_phrase)s)
     UNION
-    SELECT question.id,question.submission_time,view_number, question.vote_number,title, question.message
+    SELECT question.id,question.submission_time,view_number, question.vote_number,title
     FROM question
     WHERE (title ILIKE %(search_phrase)s) or (message ILIKE %(search_phrase)s);
     """
@@ -297,9 +346,10 @@ def delete_question(cursor:RealDictCursor, question_id):
             FROM question 
             WHERE id=%(id)s    
     """
-    param = { "id" : question_id }
+    param = { "id" : str(question_id) }
     cursor.execute(command1, param)
     cursor.execute(command2, param)
+
     return None
 
 @database_common.connection_handler

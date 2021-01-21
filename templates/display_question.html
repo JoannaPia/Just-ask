@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+     <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
     <title>Display question</title>
     <link href="/static/css/style.css" rel="stylesheet">
     <style> td, th { border: 2px solid white; } h1, body { color: white} </style>
@@ -41,11 +42,10 @@
         </tbody>
         </table>
         <br>
-            <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="button2">Edit question</button></a>
-            <a href="{{ url_for("delete_question", question_id=question["id"]) }}"><button class="button1">Delete question</button></a>
+             <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="button2">Edit question</button></a>
+              <a href="{{ url_for("delete_question", question_id=question["id"]) }}"><button class="button1">Delete question</button></a>
             <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="button3">Add answer</button></a>
         <br>
-
         <h1>All Answers</h1>
         {% if answers == [] %}
             There are no answers to this question yet
@@ -130,7 +130,7 @@
     </table>
     {% endif %}
         <br>
-        <a href="{{ url_for("list") }}"><button class="button2">Back to the list of questions</button></a>
+       <a href="{{ url_for("list") }}"><button class="button2">Back to the list of questions</button></a>
 
     <br>
 </body>

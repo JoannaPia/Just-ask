@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+     <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
     <title>Just Ask!</title>
     <link href="../static/css/style.css" rel="stylesheet">
    <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
@@ -19,9 +20,9 @@
     <div class="menu_top">
         <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
         <a href="{{ url_for("list") }}"><button type="submit" class="button2">List all question</button></a>
-    </div>
-<br>
 </div>
+    <br><br><br>
+         </div>
 </div>
 Latest 5 questions
 <br>
@@ -53,15 +54,42 @@ Latest 5 questions
                             </td>
                         {% endif %}
                     {% endfor %}
-
-                <td class="button">
+                    </tr>
+            <tr>
+                    <td class="button">
                    <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="button1" type="submit">Vote up</button></a>
                 </td>
                 <td class="button">
                     <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="button3" type="submit">Vote down</button></a>
-                </td>
-                </tr>
+                    <td>
+                        <button class="button3" onClick="showComment({{ question["id"] }})">Add comment</button>
+                    </td>
+                    <td>
+                        <button class="button3" onClick="showComments({{ question["id"] }})">Show comments</button>
+                   </td>
+                    </tr>
+             <table id="comments_q{{ question['id'] }}" style='display:none;'>
+                {% for comment_q in comments_q %}
+                    {% if comment_q['question_id'] == question['id'] %}
+                        <tr>
+                            <th>
+                                {{ comment_q['message'] }}
+                            </th>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </table>
+
+                <div id="comment_q{{ question['id'] }}" style='display:none;'>
+                       <form action="{{ url_for('save_comment_question', question_id=question['id']) }}" method="POST">
+                            <label for="message">Comment:</label><br>
+                            <textarea name="message" id="message" minlength="3" rows="4" cols="50" maxlength="500"></textarea>
+                            <br><br>
+                            <button class="button2" type="submit" value="Submit">Add comment_q</button>
+                       </form>
+                </div>
             {% endfor %}
+
         </tbody>
     </table>
 </body>
