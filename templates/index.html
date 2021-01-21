@@ -17,11 +17,14 @@
 <br>
 <div id="container">
     <div class="menu_top">
-<a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
+        <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
+        <a href="{{ url_for("list") }}"><button type="submit" class="button2">List all question</button></a>
+    </div>
+<br>
 </div>
-    <br><br><br>
-         </div>
 </div>
+Latest 5 questions
+<br>
      <table>
         <thead>
             <tr>

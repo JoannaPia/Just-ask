@@ -18,9 +18,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def index():
-    questions = data_manager.get_all_questions()
+    questions = data_manager.get_five_questions()
     return render_template("index.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
 
+
+@app.route('/list')
+def list():
+    questions = data_manager.get_all_questions()
+    return render_template("list.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
 
 @app.route('/add-question')
 def add_question():

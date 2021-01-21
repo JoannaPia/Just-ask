@@ -300,5 +300,16 @@ def delete_question(cursor:RealDictCursor, question_id):
     param = { "id" : question_id }
     cursor.execute(command1, param)
     cursor.execute(command2, param)
-    print(question_id)
     return None
+
+@database_common.connection_handler
+def get_five_questions(cursor: RealDictCursor) -> dict:
+    query = """
+            SELECT id, submission_time, view_number, vote_number, title
+            FROM question
+            ORDER by submission_time DESC
+            LIMIT 5
+            """
+    cursor.execute(query)
+    questions = cursor.fetchall()
+    return questions
