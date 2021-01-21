@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Just Ask!</title>
+    <link href="../static/css/style.css" rel="stylesheet">
+   <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
+    <script type = "text/javascript"
+         src = "{{ url_for('static', filename = 'comment_question.js') }}" ></script>
+</head>
+<body>
+<h1>Just Ask!</h1>
+
+    <form action="/search/" method=post>
+        <input id="search-phrase" type="text" placeholder="Search ..." name ="search_phrase">
+        <button class="button1" type="submit">Search</button>
+    </form>
+
+<br>
+<div id="container">
+    <div class="menu_top">
+        <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
+    </div>
+    <br><br><br>
+</div>
+</div>
+     <table>
+        <thead>
+            <tr>
+                {% for header in headers %}
+                {% if header == "submission_time" or header == "view_number"
+                        or header == "vote_number" or header == "title" %}
+                        <th>
+                            {{ headers_print[header] }}
+                        </th>
+                {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for question in questions %}
+                <tr>
+                    {%  for header in headers %}
+                        {% if header == "submission_time" or header == "view_number"
+                            or header == "vote_number" or header == "title" %}
+                            <td>
+                                {% if header == "title" %}
+                                    <a href="{{ url_for("display_question", question_id=question["id"]) }}">{{ question[header] }}</a>
+                                {%  else %}
+                                    {{ question[header] }}
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+
+                <td class="button">
+                   <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="button1" type="submit">Vote up</button></a>
+                </td>
+                <td class="button">
+                    <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="button3" type="submit">Vote down</button></a>
+                </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
