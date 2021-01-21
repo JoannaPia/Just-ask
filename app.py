@@ -18,12 +18,14 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 def index():
     questions = data_manager.get_five_questions()
+    #comments_q = data_manager.get_comments_q(question_id)
     return render_template("index.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
 
 
 @app.route('/list')
 def list():
     questions = data_manager.get_all_questions()
+    #comments_q = data_manager.get_comments_q(question_id)
     return render_template("list.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
 
 
@@ -45,10 +47,10 @@ def display_question(question_id):
     question = data_manager.get_question(question_id)
     answers = data_manager.get_answers(question_id)
     comments = data_manager.get_comments(question_id)
-    comments_q = data_manager.get_comments_q(question_id)
+    #comments_q = data_manager.get_comments_q(question_id)
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
                            answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
-                           comments=comments, comments_q=comments_q)
+                           comments=comments)
 
 @app.route('/save_answer/<int:q_id>', methods=['POST'])
 def save_answer(q_id):
@@ -66,10 +68,9 @@ def delete_question(question_id):
     data_manager.delete_question(question_id)
     return redirect(url_for('index'))
 
-
 @app.route('/answer/<int:answer_id>/delete')
-def delete_answer(answer_id):
-    question_id = data_manager.delete_answer(answer_id)
+def delete_comment_to_answer(answer_id):
+    question_id = data_manager.delete_comment_to_answer(answer_id)
     return redirect(url_for('display_question', question_id=question_id))
 
 @app.route('/<int:answer_id>/vote-up')

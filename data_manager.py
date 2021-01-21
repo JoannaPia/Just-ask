@@ -125,21 +125,35 @@ def add_answer(cursor: RealDictCursor, sub, vote_n, question_id, mess, image):
     return nid + 1
 
 @database_common.connection_handler
-def delete_answer(cursor:RealDictCursor, answer_id):
-    question_id_query = "SELECT question_id FROM answer WHERE id={}".format(answer_id)
-
-    cursor.execute(question_id_query)
-    question_id = cursor.fetchone()
-
-    command = """
-            DELETE
-            FROM answer 
-            WHERE id=%(answer_id)s
+def delete_comment_to_answer(cursor: RealDictCursor, answer_id):
+    q_id = get_answer_question_id(answer_id)
+    command_comment = """
+    DELETE from comment where answer_id=%(answer_id)s
     """
-    param = { "answer_id" : answer_id }
-    cursor.execute(command, param)
-    print(question_id)
-    return question_id
+
+    param_comment = {"answer_id": answer_id}
+    cursor.execute(command_comment, param_comment)
+
+    command_comment = """
+        DELETE from answer where id=%(answer_id)s
+        """
+
+    param_comment = {"answer_id": answer_id}
+    cursor.execute(command_comment, param_comment)
+    return q_id
+
+
+
+@database_common.connection_handler
+def get_question_by_anwserid(cursor: RealDictCursor, answer_id):
+    command_comment = """
+      SELECT id from question where answer_id=%(answer_id)s
+      """
+
+    param_comment = {"answer_id": answer_id}
+    cursor.execute(command_comment, param_comment)
+    q_id = cursor.fetchone()
+    return q_id['id']
 
 @database_common.connection_handler
 def vote_up_answer(cursor: RealDictCursor, answer_id):

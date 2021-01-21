@@ -56,18 +56,19 @@ Latest 5 questions
                     {% endfor %}
                     </tr>
             <tr>
-                    <td class="button">
+                <td class="button">
                    <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="button1" type="submit">Vote up</button></a>
                 </td>
                 <td class="button">
                     <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="button3" type="submit">Vote down</button></a>
-                    <td>
-                        <button class="button3" onClick="showComment({{ question["id"] }})">Add comment</button>
-                    </td>
-                    <td>
-                        <button class="button3" onClick="showComments({{ question["id"] }})">Show comments</button>
-                   </td>
-                    </tr>
+                </td>
+                <td>
+                    <button class="button3" onClick="showComment({{ question["id"] }})">Add comment</button>
+                </td>
+                <td>
+                    <button class="button3" onClick="showComments({{ question["id"] }})">Show comments</button>
+                </td>
+            </tr>
              <table id="comments_q{{ question['id'] }}" style='display:none;'>
                 {% for comment_q in comments_q %}
                     {% if comment_q['question_id'] == question['id'] %}

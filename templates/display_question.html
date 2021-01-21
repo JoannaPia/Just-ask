@@ -83,7 +83,7 @@
                         <a href="{{ url_for("edit_answer",answer_id=answer["id"]) }}"><button class="button2" type="submit" >Edit answer</button></a>
                     </th>
                     <th>
-                        <a href="{{ url_for("delete_answer", answer_id=answer["id"]) }}"><button class="button2" type="submit" >Delete answer</button></a>
+                        <a href="{{ url_for("delete_comment_to_answer", answer_id=answer["id"]) }}"><button class="button2" type="submit" >Delete answer</button></a>
                     </th>
                     <th>
                         <a href="{{ url_for("vote_up_answers", answer_id=answer["id"]) }}"><button class="button1" type="submit">Vote up</button></a>
@@ -130,7 +130,7 @@
     </table>
     {% endif %}
         <br>
-       <a href="{{ url_for("list") }}"><button class="button2">Back to the list of questions</button></a>
+       <a href="{{ url_for("list" ) }}"><button class="button2">Back to the list of questions</button></a>
 
     <br>
 </body>
