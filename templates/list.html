@@ -23,6 +23,22 @@
     </div>
     <br><br><br>
 </div>
+<form action="{{ url_for("sort_questions") }}" method="POST">
+    <label for="order_by">Sort questions by:</label>
+        <select name="order_by" id="order_by">
+            <option value="id">id</option>
+            <option value="submission_time">submission time</option>
+            <option value="view_number">number of views</option>
+            <option value="vote_number">number of votes</option>
+            <option value="title">title</option>
+            <option value="message">message</option>
+        </select>
+    <label for="order_direction">Order:</label>
+        <select name="order_direction" id="order_direction">
+            <option value="asc">ascending</option>
+            <option value="desc">descending</option>
+        </select>
+    <button type="submit" value="Submit">Sort</button>
      <table>
         <thead>
             <tr>

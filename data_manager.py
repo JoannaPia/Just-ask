@@ -55,7 +55,8 @@ def get_answers(cursor: RealDictCursor, question_id):
     query = """
         SELECT *
         From answer
-        WHERE question_id = %(question_id)s;
+        WHERE question_id = %(question_id)s
+        ORDER BY submission_time
     """
 
     param = {'question_id': question_id}
@@ -376,10 +377,20 @@ def vote_down_question(cursor: RealDictCursor, id):
 def delete_question(cursor:RealDictCursor, question_id):
     command1 = """
             DELETE
+            FROM comment 
+            WHERE question_id=%(id)s
+            """
+    command2 = """
+            DELETE
+            FROM comment_q 
+            WHERE question_id=%(id)s    
+            """
+    command3 = """
+            DELETE
             FROM answer
             WHERE question_id=%(id)s
-    """
-    command2 = """
+            """
+    command4 = """
             DELETE
             FROM question 
             WHERE id=%(id)s    
@@ -387,7 +398,8 @@ def delete_question(cursor:RealDictCursor, question_id):
     param = { "id" : str(question_id) }
     cursor.execute(command1, param)
     cursor.execute(command2, param)
-
+    cursor.execute(command3, param)
+    cursor.execute(command4, param)
     return None
 
 @database_common.connection_handler
@@ -401,3 +413,38 @@ def get_five_questions(cursor: RealDictCursor) -> dict:
     cursor.execute(query)
     questions = cursor.fetchall()
     return questions
+
+@database_common.connection_handler
+def sort_questions(cursor: RealDictCursor, order_by, order_direction) -> dict:
+    query = """
+        SELECT id, submission_time, view_number, vote_number, title
+            FROM question
+            ORDER by %(order_by)s DESC
+            """
+    param = {'order_by': order_by}
+    cursor.execute(query, param)
+    questions = cursor.fetchall()
+    return questions
+
+@database_common.connection_handler
+def get_answers_id(cursor: RealDictCursor, question_id):
+    query = """
+        SELECT id
+        From answer
+        WHERE question_id = %(question_id)s;
+    """
+    param = {'question_id': question_id}
+    cursor.execute(query, param)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_question_tag(cursor:RealDictCursor, question_id):
+    command = """
+            DELETE
+            FROM question_tag
+            WHERE question_id =%(id)s
+            """
+    param = {"id": str(question_id)}
+    cursor.execute(command, param)
+    return None
