@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
+    <title>New Tag</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!--style> td, th { border: 2px solid white; } h1, body { color: white} </style-->
+ <script type = "text/javascript"
+         src = "{{ url_for('static', filename = 'comment_answer.js') }}" ></script>
+</head>
+<body>
+<h1> Add tags to your question</h1>
+<table class="table table-borderless table-dark">
+    <thead>
+        <tr>
+            {% for header in headers %}
+                {% if header == "submission_time" or header == "view_number"
+                    or header == "vote_number" or header == "title" %}
+                    <th>
+                        {{ headers_print[header] }}
+                    </th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {%  for header in headers %}
+                {% if header == "submission_time" or header == "view_number"
+                or header == "vote_number" or header == "title" %}
+                    <td>
+                        {% if header == "title" %}
+                            <a href="{{ url_for("display_question", question_id=question["id"]) }}">{{ question[header] }}</a>
+                        {%  else %}
+                            {{ question[header] }}
+                        {% endif %}
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </body>
+</table>
+<textarea name="tags" id="tags" type="text" minlength="5" maxlength="50">
+    {% for tag in tags_name %}
+        {{ tag["name"] }}
+    {% endfor %}
+</textarea>
+    <form action="{{ url_for("add_tag", question_id=question["id"]) }}">
+        <label for="tag">Tags:</label>
+        <select name="tag" id="tag">
+            {% for tag in tags_list %}
+                <option value="{{ tag }}">{{ tag["name"] }}</option>
+            {%  endfor %}
+        </select>
+        <button type="submit">Add tag</button>
+    </form>
+</html>

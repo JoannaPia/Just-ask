@@ -180,5 +180,28 @@ def sort_questions():
     return render_template("list.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
 
 
+@app.route('/question/<question_id>/new_tag')
+def new_tag(question_id):
+    tags_name =[]
+    tags = data_manager.get_tags(question_id)
+    for tag in tags:
+        tags_name.append(data_manager.get_tags_name(tag["tag_id"]))
+    question = data_manager.get_question(question_id)
+    tags_list = data_manager.get_tags_list()
+    print ("a")
+    return render_template("new_tag.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, question=question,
+                           tags_name=tags_name, tags_list=tags_list)
+
+
+@app.route('/question/<question_id>/add_tag', methods=["GET"])
+def add_tag(question_id):
+    tag_name = request.args.get('tag')
+    for x in tag_name:
+        print(x)
+    tag_id = data_manager.get_tag_id(tag_name["name"])
+    data_manager.add_tag_to_question(question_id, tag_id['name'])
+    return redirect(url_for('display_question', question_id=question_id))
+
+
 if __name__ == '__main__':
     app.run(debug=True)

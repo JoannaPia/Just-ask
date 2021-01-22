@@ -448,3 +448,58 @@ def delete_question_tag(cursor:RealDictCursor, question_id):
     param = {"id": str(question_id)}
     cursor.execute(command, param)
     return None
+
+@database_common.connection_handler
+def get_tags(cursor:RealDictCursor, question_id):
+    query = """
+    SELECT *
+    FROM question_tag
+    WHERE question_id = %(question_id)s; 
+    """
+    param = {'question_id': question_id}
+    cursor.execute(query, param)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def get_tags_name(cursor:RealDictCursor, tag_id):
+    query = """
+    SELECT name
+    FROM tag
+    WHERE id = %(tag_id)s
+    """
+    param = {"tag_id" : tag_id}
+    cursor.execute(query, param)
+    return cursor.fetchone()
+
+@database_common.connection_handler
+def get_tags_list(cursor:RealDictCursor):
+    query = """ 
+    SELECT *
+    FROM tag
+    """
+    cursor.execute(query)
+    tags_list = cursor.fetchall()
+    return tags_list
+
+@database_common.connection_handler
+def get_tag_id(cursor:RealDictCursor, tag_name):
+    query = """
+    SELECT id
+    FROM tag
+    WHERE name = %(tag_id)s
+    """
+    param = {"tag_name": tag_name}
+    cursor.execute(query, param)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def add_tag_to_question(cursor:RealDictCursor, question_id, tag_id):
+    command = """
+    INSERT INTO question_tag (question_id, tag_id)
+    VALUES (%(question_id)s, %(tag_id)s)
+    """
+    param = {
+        "question_id": question_id,
+        "tag_id": tag_id
+    }
+    cursor.execute(command, param)

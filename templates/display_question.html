@@ -57,6 +57,9 @@
         <th scope="col">
         <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Add answer</button></a>
         </th>
+        <th scope="col">
+             <a href="{{ url_for("new_tag", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Add tags</button></a>
+        </th>
 
         <table class="table table-hover table-dark">
             <thead>
