@@ -143,7 +143,43 @@ def delete_comment_to_answer(cursor: RealDictCursor, answer_id):
     cursor.execute(command_comment, param_comment)
     return q_id
 
+@database_common.connection_handler
+def delete_one_comment(cursor: RealDictCursor, comment_id, answer_id):
+    q_id = get_answer_question_id(answer_id)
 
+    command_comment = """
+        DELETE from comment where answer_id=%(answer_id)s and id=%(comment_id)s
+        """
+
+    param_comment = {
+            "comment_id": comment_id,
+            "answer_id": answer_id
+            }
+    cursor.execute(command_comment, param_comment)
+    return q_id
+
+@database_common.connection_handler
+def delete_one_comment_q(cursor: RealDictCursor, comment_q_id, question_id):
+    q_id = get_question_id(question_id)
+
+    command_comment = """
+        DELETE from comment where question_id=%(question_id)s and id=%(comment_q_id)s
+        """
+
+    param_comment = {
+            "comment_q_id": comment_q_id,
+            "question_id": question_id
+            }
+    cursor.execute(command_comment, param_comment)
+    return q_id
+
+@database_common.connection_handler
+def get_comments_q(cursor: RealDictCursor):
+    command_comment = """
+          SELECT * from comment_q
+          """
+    cursor.execute(command_comment)
+    return cursor.fetchall()
 
 @database_common.connection_handler
 def get_question_by_anwserid(cursor: RealDictCursor, answer_id):
@@ -183,11 +219,11 @@ def vote_down_answer(cursor: RealDictCursor, answer_id):
     cursor.execute(query)
     vote_n = cursor.fetchone()
 
-    new_vote_number = vote_n['vote_number']-1
+    new_vote_number = vote_n['vote_number']
 
     command = """
     UPDATE answer 
-    SET vote_number = (%(vote_n)s)
+    SET vote_number = (%(vote_n)s)-1
     WHERE id=%(answer_id)s 
     """
     param ={
@@ -256,19 +292,6 @@ def save_comment_question(cursor: RealDictCursor, question_id, message):
     print(message)
     cursor.execute(query)
     return question_id
-
-@database_common.connection_handler
-def get_comments_q(cursor: RealDictCursor, question_id):
-    query = """
-    SELECT * from comment_q WHERE question_id = %(question_id)s
-    """
-    params = {
-        'question_id': question_id
-    }
-    cursor.execute(query, params)
-    com_dict = cursor.fetchall()
-
-    return com_dict
 
 @database_common.connection_handler
 def save_edit_answer(cursor: RealDictCursor, answer_id, message):

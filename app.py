@@ -3,6 +3,7 @@ import os
 import data_manager
 import re
 
+
 HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
                  "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
 QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
@@ -18,8 +19,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/')
 def index():
     questions = data_manager.get_five_questions()
-    #comments_q = data_manager.get_comments_q(question_id)
-    return render_template("index.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
+    comments_q = data_manager.get_comments_q()
+    return render_template("index.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions, comments_q=comments_q)
 
 
 @app.route('/list')
@@ -47,7 +48,6 @@ def display_question(question_id):
     question = data_manager.get_question(question_id)
     answers = data_manager.get_answers(question_id)
     comments = data_manager.get_comments(question_id)
-    #comments_q = data_manager.get_comments_q(question_id)
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
                            answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
                            comments=comments)
@@ -95,6 +95,17 @@ def save_comment_answer(answer_id):
 def save_comment_question(question_id):
     message = request.form['message']
     q_id = data_manager.save_comment_answer(question_id, message)
+    return redirect(url_for('index', question_id=q_id))
+
+@app.route('/<int:answer_id>/comment/<int:comment_id>/delete')
+def delete_one_comment(comment_id, answer_id):
+    q_id = data_manager.delete_one_comment(comment_id, answer_id)
+    return redirect(url_for('display_question', question_id=q_id))
+
+
+@app.route('/<int:question_id>/comment/<int:comment_q_id>/del')
+def delete_one_comment_q(comment_q_id, question_id):
+    q_id = data_manager.delete_one_comment_q(comment_q_id, question_id)
     return redirect(url_for('index', question_id=q_id))
 
 
@@ -154,7 +165,6 @@ def search_phrase():
         answers = data_manager.get_all_answers()
     return render_template("search_questions.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT,
                            questions=search_question, search_phrase=search_phrase, re=re, answers=answers)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
