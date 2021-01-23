@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, redirect
 import os
 import data_manager
 import re
-
+import sort
 
 HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
                  "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
@@ -48,9 +48,13 @@ def display_question(question_id):
     question = data_manager.get_question(question_id)
     answers = data_manager.get_answers(question_id)
     comments = data_manager.get_comments(question_id)
+    tags_name = []
+    tags = data_manager.get_tags(question_id)
+    for tag in tags:
+        tags_name.append(data_manager.get_tags_name(tag["tag_id"]))
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
                            answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
-                           comments=comments)
+                           comments=comments, tags_name=tags_name)
 
 @app.route('/save_answer/<int:q_id>', methods=['POST'])
 def save_answer(q_id):
@@ -70,7 +74,7 @@ def delete_question(question_id):
         data_manager.delete_comment_to_answer(id["id"])
     data_manager.delete_question_tag(question_id)
     data_manager.delete_question(question_id)
-    return redirect(url_for('index'))
+    return redirect(url_for('list'))
 
 @app.route('/answer/<int:answer_id>/delete')
 def delete_comment_to_answer(answer_id):
@@ -135,7 +139,7 @@ def vote_up_on_question(question_id, table):
     if table == "question":
         data_manager.vote_up_question(id=question_id)
     questions = data_manager.get_all_questions()
-    return redirect(url_for('index'))
+    return redirect(url_for('list'))
 
 
 @app.route('/vote-down/<int:question_id>/<table>')
@@ -143,7 +147,7 @@ def vote_down_on_question(question_id, table):
     if table == "question":
         data_manager.vote_down_question(id=question_id)
     questions = data_manager.get_all_questions()
-    return redirect(url_for('index'))
+    return redirect(url_for('list'))
 
 
 @app.route('/edit_question/<int:question_id>/edit', methods=['GET'])
@@ -174,7 +178,7 @@ def search_phrase():
 def sort_questions():
     order_by = request.form['order_by']
     order_direction = request.form['order_direction']
-    questions = data_manager.sort_questions(order_by, order_direction)
+    questions = sort.sort_questions(order_by, order_direction)
     return render_template("list.html", headers=QUESTIONS_HEADERS,
                            headers_print=HEADERS_PRINT, questions=questions)
 
@@ -186,18 +190,17 @@ def new_tag(question_id):
         tags_name.append(data_manager.get_tags_name(tag["tag_id"]))
     question = data_manager.get_question(question_id)
     tags_list = data_manager.get_tags_list()
-    print ("a")
     return render_template("new_tag.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, question=question,
                            tags_name=tags_name, tags_list=tags_list)
 
 
-@app.route('/question/<question_id>/add_tag', methods=["GET"])
+@app.route('/question/<question_id>/add_tag', methods=["GET", "POST"])
 def add_tag(question_id):
     tag_name = request.args.get('tag')
-    for x in tag_name:
-        print(x)
-    tag_id = data_manager.get_tag_id(tag_name["name"])
-    data_manager.add_tag_to_question(question_id, tag_id['name'])
+
+    tag_id = data_manager.get_tag_id(tag_name)
+    print(tag_id['id'])
+    data_manager.add_tag_to_question(question_id, tag_id["id"])
     return redirect(url_for('display_question', question_id=question_id))
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@
             </tr>
         </thead>
         <tbody>
-            <th>
+            <tr>
                     {% for header in headers %}
                         <th>
                             {% if header == "image" %}
@@ -43,10 +43,10 @@
                     <input type="submit" value="Attach an image" class="btn btn-outline-primary">
                     </form>
                 </th>
-            </th>
+            </tr>
 
         </tbody>
-        </table>
+    </table>
         <th scope="col">
              <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Edit question</button></a>
         </th>
@@ -59,55 +59,75 @@
         <th scope="col">
         <a href="{{ url_for("new_tag", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Add tags</button></a>
         </th>
-        <br>
-        <table class="table table-hover table-dark">
-            <thead>
-        <br>
+         Current tags :
+            {% if tags_name %}
+            {% for tags in tags_name %}
+                {{ tags['name'], }}
+            {% endfor %}
+            {% endif %}
+        <br><br>
         <h1><span class="badge badge-secondary">All answer</span></h1>
-         <th class="col">
-             {% if answers == [] %}
-                There are no answers to this question yet
-                        <br><br>
-                    {% else %}
-                            <th class="col">
-                        {% for answer in answers %}
-                            {% for header in answers_headers %}
-                             </th>
-                                {% if header == "image" %}
-                                    {% for answer_image_name in answer_image_names %}
-                                        {% if "answer"+display_answer['id'] in answer_image_name %}
-                                            <img src="{{ url_for('static', filename='images/' + answer_image_name) }}" alt="Image not found" width="100" height="100">
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                            <th class="col">
-                        {{ answer[header] }}
-                {%  endif %}
-                    </th>
-         </th>
-            </thead>
-                    {% endfor %}
+        {% if answers == [] %}
+            There are no answers to this question yet
 
+        {% else %}
+        <table >
+            <thead>
+                <tr class="col">
+                {% for header in answers_headers %}
                     <th class="col">
-                        <a href="{{ url_for("edit_answer",answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit" >Edit answer</button></a>
+                        {% if header == "image" %}
+                            {% for answer_image_name in answer_image_names %}
+                                {% if "answer"+display_answer['id'] in answer_image_name %}
+                                    <img src="{{ url_for('static', filename='images/' + answer_image_name) }}" alt="Image not found" width="100" height="100">
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {{ header }}
+                        {% endif %}
                     </th>
-                    <th class="col">
-                        <a href="{{ url_for("delete_comment_to_answer", answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit" >Delete answer</button></a>
-                    </th>
-                    <th class="col">
-                        <a href="{{ url_for("vote_up_answers", answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit">Vote up</button></a>
-                    </th>
-                    <th class="col">
-                        <a href="{{ url_for("vote_down_answers", answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit">Vote down</button></a>
-                    </th>
-                    <th class="col">
-                         <button class="btn btn-outline-primary" onClick="showComment({{ answer["id"] }})">Add comment</button>
-                    </th>
-                    <th class="col">
-                       <button class="btn btn-outline-primary" onClick="showComments({{ answer["id"] }})">Show comments</button>
-                    </th>
-                </th>
-             </table>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for answer in answers %}
+                     <tr>
+                        {%  for header in answers_headers %}
+                        <td>
+                            {% if header == "image" %}
+                                {% for answer_image_name in answer_image_names %}
+                                    {% if "answer"+display_answer['id'] in answer_image_name %}
+                                        <img src="{{ url_for('static', filename='images/' + answer_image_name) }}" alt="Image not found" width="100" height="100">
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {{ answer[header] }}
+                            {%  endif %}
+                        </td>
+                        {% endfor %}
+
+                        <td>
+                            <a href="{{ url_for("edit_answer",answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit" >Edit answer</button></a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for("delete_comment_to_answer", answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit" >Delete answer</button></a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for("vote_up_answers", answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit">Vote up</button></a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for("vote_down_answers", answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit">Vote down</button></a>
+                        </td>
+                        <td>
+                             <button class="btn btn-outline-primary" onClick="showComment({{ answer["id"] }})">Add comment</button>
+                        </td>
+                        <td>
+                           <button class="btn btn-outline-primary" onClick="showComments({{ answer["id"] }})">Show comments</button>
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table class="table table-hover table-dark">
             <tr>
 
                 <div id="comment{{ answer['id'] }}" style='display:none;'>
@@ -137,12 +157,10 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
-            {% endfor %}
+                {% endfor %}
             </tr>
-        </tbody>
-    </table>
-    {% endif %}
-        <br>
+        {% endif %}
+          <br>
        <a href="{{ url_for("list" ) }}"><button class="btn btn-outline-primary">Back to the list of questions</button></a>
 
     <br>

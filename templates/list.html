@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
      <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
     <title>Just Ask!</title>
-
-   <!--style> td, th {  border: 2px solid white } h1, body { color: white} </style-->
     <script type = "text/javascript"
          src = "{{ url_for('static', filename = 'comment_question.js') }}" >
     </script>
@@ -38,8 +36,9 @@
             </div>
         </div>
     </div>
-
-    <div class="row" class="col-lg-3" >
+</div>
+<p></p>
+    <div class="row" class="col-lg-3" class="dropdown-menu">
     <form action="{{ url_for("sort_questions") }}" method="POST">
     <label class="input-group-text" class="form-control"  for="order_by">Sort questions by:</label>
         <select class="form-control" name="order_by" id="order_by">
@@ -50,16 +49,17 @@
             <option value="title">title</option>
             <option value="message">message</option>
         </select>
-    </div>
-    <div class="row" class="col-lg-3" class="dropdown-menu">
-    <label class="input-group-text" class="form-control"for="order_direction">Order:</label>
-        <select class="form-control" name="order_direction" id="order_direction">
-            <option class="dropdown-item"  value="asc">ascending</option>
+
+    <label class="input-group-text" class="form-control" for="order_direction">Order:</label>
+        <select class="form-control" name="order_direction" id="order_direction" >
+            <option value="asc">ascending</option>
             <option value="desc">descending</option>
         </select>
         <p></p>
     <button class="btn btn-outline-primary" class="btn btn-outline-secondary dropdown-toggle" type="submit" value="Submit">Sort</button>
-    <p></p>
+    </form>
+
+        <p></p>
     </div>
 
 <table class="table table-hover table-dark">

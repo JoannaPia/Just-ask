@@ -7,7 +7,6 @@
     <script type = "text/javascript"
          src = "{{ url_for('static', filename = 'comment_question.js') }}" >
     </script>
-    <!--link href="/static/style.css" rel="stylesheet"-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
@@ -91,7 +90,7 @@
                             <label for="message">Comment:</label><br>
                             <textarea name="message" id="message" minlength="3" rows="4" cols="50" maxlength="500"></textarea>
                             <br><br>
-                            <button class="btn btn-outline-primary type="submit" value="Submit">Add comment_q</button>
+                            <button class="btn btn-outline-primary" type="submit" value="Submit">Add comment_q</button>
                        </form>
             </div>
             <div id="comments_q{{ question['id'] }}" style='display:none;'>

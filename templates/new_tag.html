@@ -9,7 +9,7 @@
  <script type = "text/javascript"
          src = "{{ url_for('static', filename = 'comment_answer.js') }}" ></script>
 </head>
-<body>
+
 <h1> Add tags to your question</h1>
 <table class="table table-borderless table-dark">
     <thead>
@@ -39,9 +39,10 @@
                 {% endif %}
             {% endfor %}
         </tr>
-    </body>
+    </tbody>
 </table>
-<textarea name="tags" id="tags" type="text" minlength="5" maxlength="50">
+
+<textarea name="tags" id="tags" minlength="5" maxlength="50">
     {% for tag in tags_name %}
         {{ tag["name"] }}
     {% endfor %}
@@ -50,7 +51,7 @@
         <label for="tag">Tags:</label>
         <select name="tag" id="tag">
             {% for tag in tags_list %}
-                <option value="{{ tag }}">{{ tag["name"] }}</option>
+                <option value="{{ tag['name'] }}">{{ tag["name"] }}</option>
             {%  endfor %}
         </select>
         <button type="submit">Add tag</button>

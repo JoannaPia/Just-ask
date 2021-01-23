@@ -414,17 +414,6 @@ def get_five_questions(cursor: RealDictCursor) -> dict:
     questions = cursor.fetchall()
     return questions
 
-@database_common.connection_handler
-def sort_questions(cursor: RealDictCursor, order_by, order_direction) -> dict:
-    query = """
-        SELECT id, submission_time, view_number, vote_number, title
-            FROM question
-            ORDER by %(order_by)s DESC
-            """
-    param = {'order_by': order_by}
-    cursor.execute(query, param)
-    questions = cursor.fetchall()
-    return questions
 
 @database_common.connection_handler
 def get_answers_id(cursor: RealDictCursor, question_id):
@@ -486,11 +475,11 @@ def get_tag_id(cursor:RealDictCursor, tag_name):
     query = """
     SELECT id
     FROM tag
-    WHERE name = %(tag_id)s
+    WHERE name = %(tag_name)s
     """
     param = {"tag_name": tag_name}
     cursor.execute(query, param)
-    return cursor.fetchall()
+    return cursor.fetchone()
 
 @database_common.connection_handler
 def add_tag_to_question(cursor:RealDictCursor, question_id, tag_id):
