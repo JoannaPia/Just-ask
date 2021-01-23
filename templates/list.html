@@ -2,30 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+     <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
     <title>Just Ask!</title>
-    <link href="../static/css/style.css" rel="stylesheet">
+
    <!--style> td, th {  border: 2px solid white } h1, body { color: white} </style-->
     <script type = "text/javascript"
-         src = "{{ url_for('static', filename = 'comment_question.js') }}" ></script>
+         src = "{{ url_for('static', filename = 'comment_question.js') }}" >
+    </script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
-<body>
-<h1>Just Ask!</h1>
+<body class="p-3 mb-2 bg-dark text-white">
 
-    <form action="/search/" method=post>
-        <input id="search-phrase" type="text" placeholder="Search ..." name ="search_phrase">
-        <button class="button1" type="submit">Search</button>
-    </form>
-
-<br>
-<div id="container">
-    <div class="menu_top">
-        <a href="{{ url_for("add_question") }}"><button type="submit" class="button2">Add new question</button></a>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+        <div class="col">
+            <h1><span class="badge badge-secondary">All question</span></h1>
+        </div>
+            <p></p>
+        <div class="col">
+            Search:
+             <form action="/search/" method=post>
+                <input id="search_phrase" type="text" placeholder="Search ..." name ="search_phrase">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+             </form>
+        </div>
+            <p></p>
+        <div>
+            <div class="col-lg-6">
+        <th scope="col">
+             <a href="{{ url_for("add_question") }}"><button type="submit" class="btn btn-outline-primary">Add new question</button></a>
+        </th>
+                <p></p>
+            </div>
+        </div>
     </div>
-    <br><br><br>
-</div>
-<form action="{{ url_for("sort_questions") }}" method="POST">
-    <label for="order_by">Sort questions by:</label>
-        <select name="order_by" id="order_by">
+
+    <div class="row" class="col-lg-3" >
+    <form action="{{ url_for("sort_questions") }}" method="POST">
+    <label class="input-group-text" class="form-control"  for="order_by">Sort questions by:</label>
+        <select class="form-control" name="order_by" id="order_by">
             <option value="id">id</option>
             <option value="submission_time">submission time</option>
             <option value="view_number">number of views</option>
@@ -33,77 +50,90 @@
             <option value="title">title</option>
             <option value="message">message</option>
         </select>
-    <label for="order_direction">Order:</label>
-        <select name="order_direction" id="order_direction">
-            <option value="asc">ascending</option>
+    </div>
+    <div class="row" class="col-lg-3" class="dropdown-menu">
+    <label class="input-group-text" class="form-control"for="order_direction">Order:</label>
+        <select class="form-control" name="order_direction" id="order_direction">
+            <option class="dropdown-item"  value="asc">ascending</option>
             <option value="desc">descending</option>
         </select>
-    <button type="submit" value="Submit">Sort</button>
-     <table>
-        <thead>
-            <tr>
-                {% for header in headers %}
+        <p></p>
+    <button class="btn btn-outline-primary" class="btn btn-outline-secondary dropdown-toggle" type="submit" value="Submit">Sort</button>
+    <p></p>
+    </div>
+
+<table class="table table-hover table-dark">
+    <thead>
+    <tr>
+        {% for header in headers %}
                 {% if header == "submission_time" or header == "view_number"
                         or header == "vote_number" or header == "title" %}
-                        <th>
+                        <th scope="col">
                             {{ headers_print[header] }}
                         </th>
                 {% endif %}
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for question in questions %}
-                <tr>
-                    {%  for header in headers %}
-                        {% if header == "submission_time" or header == "view_number"
-                            or header == "vote_number" or header == "title" %}
-                            <td>
-                                {% if header == "title" %}
-                                    <a href="{{ url_for("display_question", question_id=question["id"]) }}">{{ question[header] }}</a>
-                                {%  else %}
-                                    {{ question[header] }}
-                                {% endif %}
-                            </td>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for question in questions %}
+        <tr>
+            {%  for header in headers %}
+                {% if header == "submission_time" or header == "view_number"
+                    or header == "vote_number" or header == "title" %}
+                    <th class="col">
+                        {% if header == "title" %}
+                            <a href="{{ url_for("display_question", question_id=question["id"]) }}">{{ question[header] }}</a>
+                        {%  else %}
+                            {{ question[header] }}
                         {% endif %}
-                    {% endfor %}
+                    </th>
+                {% endif %}
+            {% endfor %}
 
-                       </tr>
-            <tr>
-                    <td class="button">
-                   <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="button1" type="submit">Vote up</button></a>
-                </td>
-                <td class="button">
-                    <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="button3" type="submit">Vote down</button></a>
-                    <td>
-                        <button class="button3" onClick="showComment({{ question["id"] }})">Add comment</button>
-                    </td>
-                    <td>
-                        <button class="button3" onClick="showComments({{ question["id"] }})">Show comments</button>
-                   </td>
-                    </tr>
-             <table id="comments_q{{ question['id'] }}" style='display:none;'>
-                {% for comment_q in comments_q %}
-                    {% if comment_q['question_id'] == question['id'] %}
-                        <tr>
-                            <th>
-                                {{ comment_q['message'] }}
-                            </th>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </table>
-                <div id="comment_q{{ question['id'] }}" style='display:none;'>
+            <th scope="col">
+                <a href="{{ url_for("vote_up_on_question", question_id=question["id"], table="question") }}"><button class="btn btn-outline-primary" type="submit">Vote up</button></a>
+            </th>
+            <th scope="col">
+                <a href="{{ url_for("vote_down_on_question", question_id=question["id"], table="question") }}"><button class="btn btn-outline-primary" type="submit">Vote down</button></a>
+            </th>
+            <th scope="col">
+                <button class="btn btn-outline-primary" onClick="showComment({{ question["id"] }})">Add comment</button>
+            </th >
+            <th scope="col">
+                <button class="btn btn-outline-primary" onClick="showComments({{ question["id"] }})">Show comments</button>
+            </th>
+        </tr>
+        <tr>
+            <div id="comment_q{{ question['id'] }}" style='display:none;'>
                        <form action="{{ url_for('save_comment_question', question_id=question['id']) }}" method="POST">
                             <label for="message">Comment:</label><br>
                             <textarea name="message" id="message" minlength="3" rows="4" cols="50" maxlength="500"></textarea>
                             <br><br>
-                            <button class="button2" type="submit" value="Submit">Add comment_q</button>
+                            <button class="btn btn-outline-primary" type="submit" value="Submit">Add comment_q</button>
                        </form>
-                </div>
-            {% endfor %}
-
-        </tbody>
-    </table>
+            </div>
+            <div id="comments_q{{ question['id'] }}" style='display:none;'>
+                {% for comment_q in comments_q %}
+                    {% if comment_q['question_id'] == question['id'] %}
+                        <tr>
+                            <th scope="col">
+                                {{ comment_q['message'] }}
+                            </th>
+                            <th scope="col">
+                                <a href="{{ url_for("delete_one_comment_q", question_id=question["id"], comment_q_id=comment_q["id"]) }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                </svg>
+                                </a>
+                            </th>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 </body>
 </html>

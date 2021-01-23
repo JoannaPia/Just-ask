@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit existing question</title>
-    <link href="/static/images/style.css" rel="stylesheet">
-    <style> td, th {  border: 2px solid white } h1, body { color: white} </style>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
-    <h1>Edit existing question</h1>
+<body class="p-3 mb-2 bg-dark text-white">
+    <h1><span class="badge badge-secondary">Edit existing question</span></h1>
     <form action="{{ url_for("save_edited_question", question_id=question_id)}}" method="POST">
         <label for="title">Title:</label><br>
         <textarea name="title" id="title" type="text" minlength="5" maxlength="50">{{ question["title"] }}</textarea>
         <br><br>
         <label for="message">Message:</label><br>
-        <textarea name="message" id="message" minlength="5" maxlength="500">{{ question["message"] }}</textarea>
+        <textarea name="message" id="message" rows="4" cols="50" minlength="5" maxlength="500">{{ question["message"] }}</textarea>
         <br><br>
         <input name="id" id="id" type="hidden" value= {{ question_id }}>
-        <button class="button2" type="submit" value="Update existing question">Save question</button>
+        <button class="btn btn-outline-primary" type="submit" value="Update existing question">Save question</button>
     </form>
         <br>
-    <a href="{{ url_for("display_question", question_id=question_id) }}"><button class="button1">Back without saving</button></a>
+    <a href="{{ url_for("display_question", question_id=question_id) }}"><button class="btn btn-outline-primary">Back without saving</button></a>
                 <br><br>
-        <a href="{{ url_for("index") }}"><button class="button3">Back to list of questions</button></a>
+        <a href="{{ url_for("index") }}"><button class="btn btn-outline-primary">Back to list of questions</button></a>
         <br>
 </body>
 </html>

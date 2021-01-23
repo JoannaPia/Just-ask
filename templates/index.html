@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
      <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
     <title>Just Ask!</title>
-
-   <!--style> td, th {  border: 2px solid white } h1, body { color: white} </style-->
     <script type = "text/javascript"
          src = "{{ url_for('static', filename = 'comment_question.js') }}" >
     </script>
+    <!--link href="/static/style.css" rel="stylesheet"-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
-<body>
+<body class="p-3 mb-2 bg-dark text-white">
 
 <div class="container">
     <div class="row">
+        <div class="col-lg-6">
         <div class="col">
-            <h1>All questions</h1>
+            <h1><span class="badge badge-secondary">All question</span></h1>
         </div>
+            <p></p>
         <div class="col">
             Search:
              <form action="/search/" method=post>
@@ -26,14 +27,21 @@
                 <button class="btn btn-outline-primary" type="submit">Search</button>
              </form>
         </div>
-        <div class="col">
+            <p></p>
+        <div>
+            <div class="col-lg-6">
+        <th scope="col">
              <a href="{{ url_for("add_question") }}"><button type="submit" class="btn btn-outline-primary">Add new question</button></a>
-        </div>
-        <div class="col">
+        </th>
+                <p></p>
+        <th scope="col">
               <a href="{{ url_for("list") }}"><button type="submit" class="btn btn-outline-primary">List all question</button></a>
+        </th>
         </div>
+        </div>
+            </div>
     </div>
-
+    <p></p>
 
 <table class="table table-hover table-dark">
     <thead>
@@ -83,7 +91,7 @@
                             <label for="message">Comment:</label><br>
                             <textarea name="message" id="message" minlength="3" rows="4" cols="50" maxlength="500"></textarea>
                             <br><br>
-                            <button class="button2" type="submit" value="Submit">Add comment_q</button>
+                            <button class="btn btn-outline-primary type="submit" value="Submit">Add comment_q</button>
                        </form>
             </div>
             <div id="comments_q{{ question['id'] }}" style='display:none;'>

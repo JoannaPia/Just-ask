@@ -72,7 +72,6 @@ def delete_question(question_id):
     data_manager.delete_question(question_id)
     return redirect(url_for('index'))
 
-
 @app.route('/answer/<int:answer_id>/delete')
 def delete_comment_to_answer(answer_id):
     question_id = data_manager.delete_comment_to_answer(answer_id)
@@ -171,14 +170,13 @@ def search_phrase():
     return render_template("search_questions.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT,
                            questions=search_question, search_phrase=search_phrase, re=re, answers=answers)
 
-
 @app.route('/sort_questions/', methods=["POST"])
 def sort_questions():
     order_by = request.form['order_by']
     order_direction = request.form['order_direction']
     questions = data_manager.sort_questions(order_by, order_direction)
-    return render_template("list.html", headers=QUESTIONS_HEADERS, headers_print=HEADERS_PRINT, questions=questions)
-
+    return render_template("list.html", headers=QUESTIONS_HEADERS,
+                           headers_print=HEADERS_PRINT, questions=questions)
 
 @app.route('/question/<question_id>/new_tag')
 def new_tag(question_id):
@@ -201,7 +199,6 @@ def add_tag(question_id):
     tag_id = data_manager.get_tag_id(tag_name["name"])
     data_manager.add_tag_to_question(question_id, tag_id['name'])
     return redirect(url_for('display_question', question_id=question_id))
-
 
 if __name__ == '__main__':
     app.run(debug=True)
