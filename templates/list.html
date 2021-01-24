@@ -41,6 +41,7 @@
     <div class="row" class="col-lg-3" class="dropdown-menu">
     <form action="{{ url_for("sort_questions") }}" method="POST">
     <label class="input-group-text" class="form-control"  for="order_by">Sort questions by:</label>
+        <p></p>
         <select class="form-control" name="order_by" id="order_by">
             <option value="id">id</option>
             <option value="submission_time">submission time</option>
@@ -49,8 +50,9 @@
             <option value="title">title</option>
             <option value="message">message</option>
         </select>
-
+<p></p>
     <label class="input-group-text" class="form-control" for="order_direction">Order:</label>
+        <p></p>
         <select class="form-control" name="order_direction" id="order_direction" >
             <option value="asc">ascending</option>
             <option value="desc">descending</option>
