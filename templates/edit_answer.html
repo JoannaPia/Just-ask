@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit answer</title>
-    <!--link href="/static/images/style.css" rel="stylesheet"-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body class="p-3 mb-2 bg-dark text-white">
+{% extends "base.html" %}
+{% block body %}
     <h1><span class="badge badge-secondary">Edit answer</span></h1>
     <form action="{{ url_for('save_edit_answer', answer_id=answer_id) }}" method="POST">
         <label for="message">Enter new message (answer)</label><br>
@@ -19,5 +12,4 @@
                 <br><br>
           <a href="{{ url_for("list") }}"><button class="btn btn-outline-primary">Back to list of questions</button></a>
         <br>
-</body>
-</html>
+{% endblock %}

@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-     <meta name="viewpoint" content="=width=device-width, user-scalable=no, initial-scal=1.0, maximum-scale=1.0" />
-    <title>New Tag</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!--style> td, th { border: 2px solid white; } h1, body { color: white} </style-->
- <script type = "text/javascript"
-         src = "{{ url_for('static', filename = 'comment_answer.js') }}" ></script>
-</head>
-<body class="p-3 mb-2 bg-dark text-white">
+{% extends "base.html" %}
+{% block body %}
 <h1><span class="badge badge-secondary">Add tags to your question</span></h1>
 <table class="table table-borderless table-dark">
     <thead>
@@ -62,5 +52,4 @@
 </div>
     </form>
 
-</body>
-</html>
+{% endblock %}

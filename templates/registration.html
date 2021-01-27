@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                    1 of 3
+            </div>
+                <div class="col-6">
+             <form action="/registration" method=post>
+                 <input id="name" type="text" placeholder="Your name" name ="name">
+                 <input id="surname" type="text" placeholder="Your surname" name ="surname">
+                 <input id="login" type="email" placeholder="Login" name ="login">
+                 <input id="password" type="password" placeholder="Password" name ="password">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+             </form>
+                </div>
+                    <div class="col">
+                        3 of 3
+                    </div>
+                </div>
+            </div>
+    <p></p>
+{% endblock %}

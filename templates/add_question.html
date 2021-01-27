@@ -1,23 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add new question</title>
-     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body class="p-3 mb-2 bg-dark text-white">
-    <h1><span class="badge badge-secondary">Add new question</span></h1>
-    <form action="{{ url_for("save_question")}}" method="POST">
-        <label for="title">Title:</label><br>
-        <textarea name="title" id="title" type="text" minlength="5" maxlength="50"></textarea>
+{% extends "base.html" %}
+{% block body %}
+<div class="container">
+<div class="row align-items-center">
+    <div class="col">
+      One of three columns
+    </div>
+    <div class="col" class="d-flex justify-content-center">
+        <p></p>
+           <h1 style="text-align: center"><span class="badge badge-secondary">Add new question</span></h1>
+    <div class="form-floating">
+        <form action="{{ url_for("save_question")}}" method="POST">
+        <label style="text-align: center" for="title">Title</label><br>
+        <textarea class="form-control" placeholder="Leave a title" name="title" id="title" type="text" minlength="5" maxlength="50"></textarea>
         <br><br>
-        <label for="message">Message:</label><br>
-        <textarea name="message" id="message" rows="4" cols="50" type="text" minlength="5" maxlength="50"></textarea>
-        <br><br>
-        <button class="btn btn-outline-primary" type="submit" value="Submit">Add new question</button>
-    </form>
-        <br>
-        <a href="{{ url_for("index") }}"><button class="btn btn-outline-primary">Back without saving</button></a>
-        <br>
-</body>
-</html>
+        <label for="message">Message</label><br>
+        <textarea class="form-control" placeholder="Leave a message"  name="message" id="message" rows="4" cols="50" type="text" minlength="5" maxlength="50"></textarea>
+         <button class="btn btn-outline-primary" type="submit" value="Submit">Add new question</button>
+        </form>
+    </div>
+         <div class="row">
+                <a href="{{ url_for("index") }}"><button class="btn btn-outline-primary">No save</button></a>
+         </div>
+        <p></p>
+    </div>
+    <div class="col">
+      One of three columns
+    </div>
+  </div>
+{% endblock %}

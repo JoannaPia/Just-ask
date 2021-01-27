@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Just Ask!</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-</head>
-<body class="p-3 mb-2 bg-dark text-white">
-<h1><span class="badge badge-secondary">Just ask!</span></h1>
+{% extends "base.html" %}
+{% block body %}
 {% if questions != [] %}
 <br>
 <a href="{{ url_for("add_question") }}"><button type="submit"  class="btn btn-outline-primary">Add new question</button></a>
@@ -38,7 +30,7 @@
                                         <a href="{{ url_for("display_question", question_id=question["id"]) }}">
                                             {% for text in re.split('[ ]', question[header]) %}
                                                 {% if search_phrase.lower() in text.lower()  %}
-                                                    <mark>{{text}}</mark>
+                                                    <mark class="badge badge-primary text-wrap">{{text}}</mark>
                                                 {% else %}
                                                     {{ text }}
                                                 {% endif %}
@@ -47,7 +39,7 @@
                                 {% elif  header == "message" %}
                                         {% for text in re.split('[ ]', question[header]) %}
                                                 {% if search_phrase.lower() in text.lower()  %}
-                                                    <mark>{{text}}</mark>
+                                                    <mark class="badge badge-primary text-wrap">{{text}}</mark>
                                                 {% else %}
                                                     {{ text }}
                                                 {% endif %}
@@ -69,7 +61,7 @@
                                 <td>
                                     {% for text in re.split('[ ]', answer["message"]) %}
                                                 {% if search_phrase.lower() in text.lower()  %}
-                                                    <mark>{{text}}</mark>
+                                                    <mark class="badge badge-primary text-wrap">{{text}}</mark>
                                                 {% else %}
                                                     {{ text }}
                                                 {% endif %}
@@ -87,6 +79,5 @@
 {% endif %}
     <br>
         <a href="{{ url_for("list") }}"><button  class="btn btn-outline-primary">Back to the list of questions</button></a>
-    <br>
-</body>
-</html>
+    <br><br>
+{% endblock %}
