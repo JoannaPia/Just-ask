@@ -5,11 +5,14 @@
     <div class="row mb-3">
           <div class="col-md-2 themed-grid-col">
                 <th>
-             <a href="{{ url_for("add_question") }}"><button type="submit" class="btn btn-outline-primary">Add new question</button></a>
+             <a href="{{ url_for("add_question") }}" style="text-align: center"><button type="submit" class="btn btn-outline-primary">Add new question</button></a>
                 </th>
           </div>
         <div class="col-md-8 themed-grid-col">
-            <div class="form-floating">
+<h1>All question</h1>
+        </div>
+        <div class="col-md-2 themed-grid-col">
+          <div class="form-floating">
     <form action="{{ url_for("sort_questions") }}" method="POST">
         <select class="form-control" aria-label="Floating label select example" name="order_by" id="order_by">
             <option selected>Sort question by</option>
@@ -27,12 +30,11 @@
             <option value="desc">descending</option>
         </select>
         <p></p>
-    <button class="btn btn-outline-primary" class="btn btn-outline-secondary dropdown-toggle" type="submit" value="Submit">Sort</button>
+    <button  class="btn btn-outline-primary" class="btn btn-outline-secondary dropdown-toggle" type="submit" value="Submit">Sort</button>
     </form>
         <p></p>
     </div>
         </div>
-        <div class="col-md-2 themed-grid-col">.col-md-3</div>
     </div>
     <div class="row" class="table-responsive">
 <table class="table table-hover table-dark">

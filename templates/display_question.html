@@ -1,30 +1,37 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="container" class="table table-hover table-dark">
-            <div class="row">
-        <h1><span class="badge badge-secondary">Full question about question</span></h1>
-            </div>
+    <div class="container">
+  <div class="row">
+  <h1 style="text-align: center"><span class="badge badge-secondary">Full question about question</span></h1>
     <div class="col">
-        <table class="table table-hover table-dark">
-            <thead>
-                {% for key in headers_print %}
-                    <th scope="col">
-                        {{ headers_print[key] }}
-                    </th>
-                {%  endfor %}
-            </thead>
     </div>
-            <table class="col">
-                    {% for header in headers %}
-                        <tr scope="col">
-                            {% if header == "image" %}
-                                {#   <img  src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100"> #}
-                            {% else %}
-                                {{ question[header] }}
-                            {% endif %}
-                        </tr>
-                    {%  endfor %}
-            <br><br>
+    <div class="col-12">
+      <table class="table table-hover table-dark">
+  <thead>
+    <tr>
+          {% for key in headers_print %}
+      <th scope="col">
+          {{ headers_print[key] }}
+      </th>
+         {%  endfor %}
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        <th>
+      {% for header in headers %}
+                <th>
+                    {% if header == "image" %}
+                        {#\   <img  src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100"> #}
+                    {% else %}
+                        {{ question[header] }}
+                </th>
+                    {% endif %}
+            </th>
+        {%  endfor %}
+    </th>
+</tr>
                 <th>
                     <form id="upload_image_question" action="" method="POST" enctype="multipart/form-data">
                     <input type="file" name="file" accept="image/*">
@@ -34,7 +41,7 @@
         </table>
     </div>
     <br>
-    <div class="col">
+    <div class="col-12">
         <th scope="col">
              <a href="{{ url_for("edit_question", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Edit question</button></a>
         </th>
@@ -56,7 +63,7 @@
         <br><br>
     </div>
     <div class="col">
-        <h1><span class="badge badge-secondary">All answer</span></h1>
+        <h1 style="text-align: center"><span class="badge badge-secondary">All answer</span></h1>
         {% if answers == [] %}
             There are no answers to this question yet
     </div>

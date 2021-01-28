@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, url_for, redirect, make_response
+from flask import Flask, render_template, request, url_for, \
+    redirect, make_response, flash
 import os
 import answers_data, questions_data, data_manager
 from data_manager import User
 import re
 import sort
 
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, logout_user, login_required
 
 HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
                  "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
@@ -229,28 +230,49 @@ def register():
         surname = request.form['surname']
         login = request.form['login']
         password = request.form['password']
-        resp = make_response(redirect(url_for('index')))
-        resp.set_cookie('userName', login)
-        data_manager.add_user(login, password)
-        return resp
+        #resp = make_response(redirect(url_for('index')))
+        #resp.set_cookie('userName', login)
+        user = data_manager.add_user(login, password)
+        login_user(data_manager.User(user))
+        return redirect(url_for('index'))
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    user = data_manager.get_user(user_id)
+    if user:
+        User = data_manager.User(user)
+        return User
+    else:
+        return None
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=["GET", "POST"])
 def login():
-    if request.method == 'GET':
+    error = None
+    next = request.args.get('next')
+    if request.method == "POST":
         email = request.args.get('email')
         password = request.args.get('password')
-        user = User(email, password)
-        login_user(user)
-        return render_template('index.html')
-    if request.method == 'POST':
-        return redirect(url_for('login'))
+        # autentykacja
+        user = data_manager.get_login(email, password)
+        print(user)
+        if user:
+            user = User(user)
+            login_user(user)
+            return redirect(url_for('index'))
+
+        error = "Login failed"
+    return render_template('login.html', error=error)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have logged out')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
-
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
 

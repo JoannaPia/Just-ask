@@ -8,22 +8,21 @@ import answers_data, questions_data
 
 headers = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
            "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
-users = []
 
-class User():
+class User(object):
     """An admin user capable of viewing reports.
 
     :param str email: email address of user
     :param str password: encrypted password for the user
 
     """
-    __tablename__ = 'user'
+    #__tablename__ = 'user'
 
-    def __init__(self, email, password):
-        #user = get_user(email)
-        self.email = email
-        self.password = password
+    def __init__(self, user):
+        self.email = user['email']
+        self.password = user['password']
         self.authenticated = True
+
 
     def is_active(self):
         """True, as all users are active."""
@@ -51,23 +50,29 @@ def data_time_now():
 @database_common.connection_handler
 def add_user(cursor: RealDictCursor, email, password):
 
-    id_user = "SELECT * FROM user"
+    id_user = "SELECT * FROM user2"
     cursor.execute(id_user)
     id_user = len(cursor.fetchall())
     # hashowanie na email i password = funkcja hash ma byc dostepna lokalnie w data_manager
-    query = "INSERT INTO user VALUES('{}', '{}');".format(email, password)
+    query = "INSERT INTO user2 VALUES('{}', '{}');".format(email, password)
     cursor.execute(query)
-    # Add users to list
-    users.append(User(email, password))
+    return get_user(email)
 
 @database_common.connection_handler
 def get_user(cursor: RealDictCursor, email):
-
-    user = "SELECT * FROM user where email='{}'".format(email)
+    user = "SELECT * FROM user2 where email='{}'".format(email)
     cursor.execute(user)
 
     return cursor.fetchone()
 
+@database_common.connection_handler
+def get_login(cursor: RealDictCursor, email, password):
+    print(email)
+    print(password)
+    user = "SELECT * FROM user2 WHERE email='{}' AND password='{}'".format(email, password)
+    cursor.execute(user)
+
+    return cursor.fetchone()
 
 @database_common.connection_handler
 def delete_comment_to_answer(cursor: RealDictCursor, answer_id):
