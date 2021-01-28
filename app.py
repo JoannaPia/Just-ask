@@ -59,8 +59,9 @@ def display_question(question_id):
     tags = data_manager.get_tags(question_id)
     for tag in tags:
         tags_name.append(data_manager.get_tags_name(tag["tag_id"]))
+
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
-                           answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
+                            answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
                            comments=comments, tags_name=tags_name)
 
 
@@ -278,6 +279,15 @@ def logout():
     logout_user()
     flash('You have logged out')
     return redirect(url_for('index'))
+
+
+@app.route('/question/<question_id>/tag/<tag_name>/delete', )
+def delete_tag_from_question(question_id, tag_name):
+    tag_id_dict = data_manager.get_tag_id(tag_name)
+    tag_id = tag_id_dict['id']
+    data_manager.delete_tag_from_question(question_id, tag_id)
+    return redirect(url_for('display_question', question_id=question_id))
+
 
 if __name__ == '__main__':
     app.secret_key = 'super secret key'

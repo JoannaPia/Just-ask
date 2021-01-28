@@ -299,3 +299,17 @@ def add_tag_to_database(cursor: RealDictCursor, tag_to_add):
     }
     cursor.execute(command, param)
     return None
+
+@database_common.connection_handler
+def delete_tag_from_question(cursor: RealDictCursor, question_id, tag_id):
+    command = """
+            DELETE
+            FROM question_tag
+            WHERE question_id =%(question_id)s AND tag_id = %(tag_id)s
+            """
+    param = {
+        "question_id": str(question_id),
+        "tag_id": str(tag_id)
+    }
+    cursor.execute(command, param)
+    return None
