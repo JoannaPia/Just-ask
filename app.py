@@ -221,6 +221,14 @@ def add_tag(question_id):
     data_manager.add_tag_to_question(question_id, tag_id["id"])
     return redirect(url_for('display_question', question_id=question_id))
 
+
+@app.route('/question/<question_id>/add_new_tag', methods=['POST','GET'])
+def add_new_tag(question_id):
+    tag_to_add = request.args.get('new_tag')
+    data_manager.add_tag_to_database(tag_to_add)
+    return redirect(url_for('new_tag', question_id=question_id))
+
+
 @app.route('/registration', methods=['POST', 'GET'])
 def register():
     if request.method == 'GET':

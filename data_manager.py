@@ -278,3 +278,24 @@ def add_tag_to_question(cursor: RealDictCursor, question_id, tag_id):
         "tag_id": tag_id
     }
     cursor.execute(command, param)
+
+
+@database_common.connection_handler
+def add_tag_to_database(cursor: RealDictCursor, tag_to_add):
+    query_max_id = """
+        SELECT MAX(id) FROM tag
+    """
+    cursor.execute(query_max_id)
+    max_id_dict = cursor.fetchone()
+    max_id = int(max_id_dict['max']) + 1
+    print(max_id)
+    command = """
+    INSERT INTO tag(id, name)
+    VALUES (%(max_id)s, %(tag_to_add)s)
+    """
+    param = {
+        "max_id" : max_id,
+        "tag_to_add" : tag_to_add
+    }
+    cursor.execute(command, param)
+    return None

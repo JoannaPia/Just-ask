@@ -51,5 +51,12 @@
     <button class="btn btn-outline-primary" type="submit">Add tag</button>
 </div>
     </form>
+<div>
+    If You want to add new tag please write it below:
+    <form action="{{ url_for('add_new_tag', question_id=question["id"]) }}" method="GET">
+        <input name="new_tag" id="new_tag" placeholder="Add new tag">
+    <button type="submit">Add new tag to database</button>
+    </form>
+</div>
 
 {% endblock %}
