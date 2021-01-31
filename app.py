@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, \
-    redirect, make_response, flash
+    redirect, make_response, flash, session
 import os
 import answers_data, questions_data, data_manager
 from data_manager import User
@@ -12,6 +12,11 @@ HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "vie
                  "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
 QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+USERS_DATA_HEADERS = {
+    'email': 'Email', 'password': 'Password', 'registration_date': 'Registration date',
+    'count_of_asked_questions': 'Count of asked questions', 'count_of_answers': 'Count of answers',
+    'count_of_comments': 'Count of comments', 'reputation': 'Reputation'
+}
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +26,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+app.secret_key = 'mojsupersekretnyklucz'
 
 @app.route('/')
 def index():
@@ -260,14 +266,15 @@ def login():
     error = None
     next = request.args.get('next')
     if request.method == "POST":
-        email = request.args.get('email')
-        password = request.args.get('password')
+        email = request.form['email']
+        password = request.form['password']
         # autentykacja
         user = data_manager.get_login(email, password)
         print(user)
         if user:
             user = User(user)
             login_user(user)
+            session['email'] = email
             return redirect(url_for('index'))
 
         error = "Login failed"
@@ -278,6 +285,7 @@ def login():
 def logout():
     logout_user()
     flash('You have logged out')
+    session.pop('email', None)
     return redirect(url_for('index'))
 
 
@@ -287,6 +295,23 @@ def delete_tag_from_question(question_id, tag_name):
     tag_id = tag_id_dict['id']
     data_manager.delete_tag_from_question(question_id, tag_id)
     return redirect(url_for('display_question', question_id=question_id))
+
+
+@app.route('/users_list')
+#@login_required
+def users_list():
+    user_email = session['email']
+    users_data = data_manager.get_users_data()
+    print('a')
+    return render_template('users_list.html', users_data=users_data, users_data_headers=USERS_DATA_HEADERS)
+
+
+@app.route('/user_page/<email>', methods=['GET'])
+#@login_required
+def user_page(email):
+    user_email = email
+    user_data = data_manager.get_user_data(user_email)
+    return render_template('users_list.html', users_data=user_data, users_data_headers=USERS_DATA_HEADERS)
 
 
 if __name__ == '__main__':

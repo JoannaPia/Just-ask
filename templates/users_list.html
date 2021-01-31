@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users list</title>
+</head>
+<body>
+
+<table>
+    <thead>
+            <tr>
+                {% for key in users_data_headers %}
+                    <th>
+                    {{ key }}
+                    </th>
+                {% endfor %}
+            </tr>
+        {% for data in users_data %}
+            <tr>
+                {%  for key in data %}
+                    <th>
+                    {% if key == 'password' %}
+                        ******
+                    {%  elif key == 'email'%}
+                        <a href="{{ url_for("user_page", email=data['email']) }}">{{ data['email'] }}</a>
+                    {% else %}
+                        {{ data[key] }}
+                    {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </thead>
+</table>
+</body>
+</html>

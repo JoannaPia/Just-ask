@@ -16,12 +16,19 @@ ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_ques
 ALTER TABLE IF EXISTS ONLY public.tag DROP CONSTRAINT IF EXISTS pk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_id CASCADE;
 
-DROP TABLE IF EXISTS public.user;
-CREATE TABLE user (
-    email text UNIQUE,
-    password text
-
+DROP TABLE IF EXISTS public.user_data;
+create table user_data
+(
+    email                    text,
+    password                 text,
+    registration_date        date,
+    user_name                text,
+    count_of_asked_questions integer,
+    count_of_answers         integer,
+    count_of_comments        integer,
+    reputation               integer
 );
+
 
 DROP TABLE IF EXISTS public.question;
 CREATE TABLE question (
@@ -76,7 +83,7 @@ CREATE TABLE tag (
     name text
 );
 
-ALTER TABLE ONLY user
+ALTER TABLE ONLY user_data
     ADD CONSTRAINT pk_user_id PRIMARY KEY (email);
 
 ALTER TABLE ONLY answer

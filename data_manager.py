@@ -50,17 +50,17 @@ def data_time_now():
 @database_common.connection_handler
 def add_user(cursor: RealDictCursor, email, password):
 
-    id_user = "SELECT * FROM user2"
+    id_user = "SELECT * FROM user_data"
     cursor.execute(id_user)
     id_user = len(cursor.fetchall())
     # hashowanie na email i password = funkcja hash ma byc dostepna lokalnie w data_manager
-    query = "INSERT INTO user2 VALUES('{}', '{}');".format(email, password)
+    query = "INSERT INTO user_data VALUES('{}', '{}');".format(email, password)
     cursor.execute(query)
     return get_user(email)
 
 @database_common.connection_handler
 def get_user(cursor: RealDictCursor, email):
-    user = "SELECT * FROM user2 where email='{}'".format(email)
+    user = "SELECT * FROM user_data where email='{}'".format(email)
     cursor.execute(user)
 
     return cursor.fetchone()
@@ -69,7 +69,7 @@ def get_user(cursor: RealDictCursor, email):
 def get_login(cursor: RealDictCursor, email, password):
     print(email)
     print(password)
-    user = "SELECT * FROM user2 WHERE email='{}' AND password='{}'".format(email, password)
+    user = "SELECT * FROM user_data WHERE email='{}' AND password='{}'".format(email, password)
     cursor.execute(user)
 
     return cursor.fetchone()
@@ -313,3 +313,29 @@ def delete_tag_from_question(cursor: RealDictCursor, question_id, tag_id):
     }
     cursor.execute(command, param)
     return None
+
+
+@database_common.connection_handler
+def get_user_data(cursor: RealDictCursor, user_email):
+    query = """ 
+    SELECT *
+    FROM user_data
+    WHERE email = %(email)s
+    """
+    param = {
+        'email': user_email
+    }
+    cursor.execute(query, param)
+    user_data = cursor.fetchall()
+    return user_data
+
+
+@database_common.connection_handler
+def get_users_data(cursor: RealDictCursor):
+    query = """ 
+    SELECT *
+    FROM user_data
+    """
+    cursor.execute(query)
+    users_data = cursor.fetchall()
+    return users_data
