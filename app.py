@@ -8,8 +8,8 @@ import sort
 
 from flask_login import LoginManager, login_user, logout_user, login_required
 
-HEADERS_PRINT = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
-                 "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
+HEADERS_PRINT = {"id": "Id", "submission_time": "Time", "view_number": "View number",
+                 "vote_number": "Vote", "title": "Title", "message": "Message", "image": "Image"}
 QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 USERS_DATA_HEADERS = {
@@ -17,6 +17,8 @@ USERS_DATA_HEADERS = {
     'count_of_asked_questions': 'Count of asked questions', 'count_of_answers': 'Count of answers',
     'count_of_comments': 'Count of comments', 'reputation': 'Reputation'
 }
+
+
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -119,9 +121,9 @@ def save_comment_answer(answer_id):
 
 
 @app.route('/<int:question_id>/save-comment_q', methods=['POST'])
-def save_comment_question(question_id):
+def save_comment_q_question(question_id):
     message = request.form['message']
-    q_id = data_manager.save_comment_answer(question_id, message)
+    q_id = data_manager.save_comment_q_question(question_id, message)
     return redirect(url_for('index', question_id=q_id))
 
 
@@ -131,10 +133,16 @@ def delete_one_comment(comment_id, answer_id):
     return redirect(url_for('display_question', question_id=q_id))
 
 
-@app.route('/<int:question_id>/comment/<int:comment_q_id>/del')
+@app.route('/<int:question_id>/comment_q/<int:comment_q_id>/del')
 def delete_one_comment_q(comment_q_id, question_id):
     q_id = data_manager.delete_one_comment_q(comment_q_id, question_id)
     return redirect(url_for('index', question_id=q_id))
+
+@app.route('/comment/<int:answer_id>/save_edit_comment', methods=['POST'])
+def save_edit_comment(answer_id):
+    message = request.form['message']
+    q_id = data_manager.save_edit_comment(answer_id, message)
+    return redirect(url_for('display_question', question_id=q_id))
 
 
 @app.route('/answer/<int:answer_id>/edit', methods=['GET'])
@@ -266,11 +274,15 @@ def login():
     error = None
     next = request.args.get('next')
     if request.method == "POST":
+        #email = request.args.get('email')
+        #password = request.args.get('password')
         email = request.form['email']
         password = request.form['password']
         # autentykacja
         user = data_manager.get_login(email, password)
         print(user)
+        print(email)
+
         if user:
             user = User(user)
             login_user(user)
@@ -288,15 +300,6 @@ def logout():
     session.pop('email', None)
     return redirect(url_for('index'))
 
-
-@app.route('/question/<question_id>/tag/<tag_name>/delete', )
-def delete_tag_from_question(question_id, tag_name):
-    tag_id_dict = data_manager.get_tag_id(tag_name)
-    tag_id = tag_id_dict['id']
-    data_manager.delete_tag_from_question(question_id, tag_id)
-    return redirect(url_for('display_question', question_id=question_id))
-
-
 @app.route('/users_list')
 #@login_required
 def users_list():
@@ -312,6 +315,14 @@ def user_page(email):
     user_email = email
     user_data = data_manager.get_user_data(user_email)
     return render_template('users_list.html', users_data=user_data, users_data_headers=USERS_DATA_HEADERS)
+
+
+@app.route('/question/<question_id>/tag/<tag_name>/delete', )
+def delete_tag_from_question(question_id, tag_name):
+    tag_id_dict = data_manager.get_tag_id(tag_name)
+    tag_id = tag_id_dict['id']
+    data_manager.delete_tag_from_question(question_id, tag_id)
+    return redirect(url_for('display_question', question_id=question_id))
 
 
 if __name__ == '__main__':

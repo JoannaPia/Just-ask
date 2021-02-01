@@ -1,44 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title style="color: darkgoldenrod">Just ask!</title>
       <script type = "text/javascript"
-         src = "{{ url_for('static', filename = 'comment_question.js') }}" >
+         src = "{{ url_for('static', filename = 'comment_question.js') }}">
     </script>
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="../static/css/style.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"></head>
-<body style="min-height: 75rem; padding-top: 4.5rem" class="p-3 mb-2 bg-dark text-white ">
-
+<body style="min-height: 75rem; padding-top: 4.5rem;" class="p-3 mb-2 bg-white text-dark " font-family="Verdana, Arial, Helvetica, sans-serif">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
- <div class="container-fluid">
-    <a class="navbar-brand" href="#">Just ask!</a>
+ <div class="container-fluid"  class="shadow p-3 mb-5 bg-white rounded">
+     <img  width="69" height="69" class="navbar-brand" src="../static/logo.png" alt="logo" />
+     <a class="navbar-brand" href="#">Just ask!</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="{{ url_for("list") }}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for("users_list") }}">Users list</a>
+           <a class="nav-link" href="{{ url_for("users_list") }}">Users list</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for("user_page", email=session.email) }}">User page</a>
         </li>
-
         <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">...</a>
         </li>
       </ul>
-     <form action="/search" method=post class="d-flex">
+     <form action="/search/" method=post class="d-flex">
         <input class="form-control me-2" id="search_phrase" type="text" placeholder="Search ..." name ="search_phrase">
         <button class="btn btn-outline-primary" type="submit">Search</button>
      </form>
         <div id="bRegistration">
             {% if current_user.is_authenticated %}
-                <h1> Hi {{ current_user.email }}! </h1>
+                <h1 style="color: darkblue" class="font-italic"> Hi {{ current_user.email }}! </h1>
             {% else %}
             <form action="{{ url_for('register') }}" method="GET"  class="d-flex">
                 <button class="btn btn-outline-primary" type="submit">Registration</button>
@@ -59,13 +58,16 @@
             {% endif %}
     </div>
 </nav>
-
 {% block body %}
 {% endblock %}
 </body>
 <p></p>
- <footer class="container">
-    <p class="float-end"><a href="#">Back to top</a></p>
+<div class="copy">
+    <p></p>
+ <footer>
+    <p  class="float-end"><a href="#">Back to top</a><p><p></p>
     <p>&copy; Just ask! 2021 &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
   </footer>
+    <p></p>
+</div>
 </html>

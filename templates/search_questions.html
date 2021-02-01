@@ -4,9 +4,9 @@
 <br>
 <a href="{{ url_for("add_question") }}"><button type="submit"  class="btn btn-outline-primary">Add new question</button></a>
 <br><br>
-    Questions which in their content or in the content of the answers contain the searched phrase
+    We hope you will find what are you looking:
 <br><br>
-     <table class="table table-hover table-dark">
+     <table class="table table-hover" class="p-3 mb-2 bg-white text-dark ">
         <thead>
             <tr>
                 {% for header in headers %}
@@ -30,7 +30,7 @@
                                         <a href="{{ url_for("display_question", question_id=question["id"]) }}">
                                             {% for text in re.split('[ ]', question[header]) %}
                                                 {% if search_phrase.lower() in text.lower()  %}
-                                                    <mark class="badge badge-primary text-wrap">{{text}}</mark>
+                                                    <mark class="badge bg-primary text-wrap" style="width: 6rem;">{{text}}</mark>
                                                 {% else %}
                                                     {{ text }}
                                                 {% endif %}
@@ -39,7 +39,7 @@
                                 {% elif  header == "message" %}
                                         {% for text in re.split('[ ]', question[header]) %}
                                                 {% if search_phrase.lower() in text.lower()  %}
-                                                    <mark class="badge badge-primary text-wrap">{{text}}</mark>
+                                                    <mark class="badge bg-primary text-wrap" style="width: 6rem;">{{text}}</mark>
                                                 {% else %}
                                                     {{ text }}
                                                 {% endif %}
@@ -61,9 +61,9 @@
                                 <td>
                                     {% for text in re.split('[ ]', answer["message"]) %}
                                                 {% if search_phrase.lower() in text.lower()  %}
-                                                    <mark class="badge badge-primary text-wrap">{{text}}</mark>
+                                                    <mark class="badge bg-primary text-wrap" style="width: 6rem;">{{text}}</mark>
                                                 {% else %}
-                                                    {{ text }}
+                                                     {{ text }}
                                                 {% endif %}
                                     {% endfor %}
                                 </td>
@@ -78,6 +78,7 @@
     <br><br>
 {% endif %}
     <br>
-        <a href="{{ url_for("list") }}"><button  class="btn btn-outline-primary">Back to the list of questions</button></a>
+        <a href="{{ url_for("list") }}"><button  class="btn btn-outline-primary">Back to questions</button></a>
     <br><br>
+    <p></p>
 {% endblock %}

@@ -7,13 +7,13 @@
 </div>
      <div class="col-6" class="d-flex justify-content-center">
         <p></p>
-    <h1 style="text-align: center" class="border border-primary"><span color="black">Update answer</span></h1>
+    <h1 style="text-align: center" class="border border-primary"><span color="black">Update comment</span></h1>
      <div class="form-floating" >
-     <form action="{{ url_for('save_edit_answer', answer_id=answer_id) }}" style="text-align: center" method="POST">
+     <form action="{{ url_for('save_edit_comment', answer_id=answer_id) }}" style="text-align: center" method="POST">
         <label for="message" class="input-group-text">Leave your update</label>
-        <textarea  class="form-control"  name="message" id="message" rows="4" cols="50" minlength="5" maxlength="500">{{ answer['message'] }}</textarea>
+        <textarea  class="form-control"  name="message" id="message" rows="4" cols="50" minlength="5" maxlength="500">{{ comment['message'] }}</textarea>
         <br>
-        <button class="btn btn-outline-primary" type="submit" value="Submit">Save update answer</button>
+        <button class="btn btn-outline-primary" type="submit" value="Submit">Save update comment</button>
      </form>
      </div>
         <br>

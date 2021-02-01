@@ -3,19 +3,16 @@
 <div class="container">
 <div class="row align-items-center">
     <div class="col">
-      One of three columns
     </div>
     <div class="col" class="d-flex justify-content-center">
         <p></p>
-           <h1 style="text-align: center"><span class="badge badge-secondary">Add new question</span></h1>
+           <h1 style="text-align: center" class="border border-primary"><span class="rounded-lg" class="badge badge-secondary">Add new question</span></h1>
     <div class="form-floating">
-        <form action="{{ url_for("save_question")}}" method="POST">
-        <label style="text-align: center" for="title">Title</label><br>
+        <form action="{{ url_for("save_question")}}" style="text-align: center" method="POST">
+        <label class="input-group-text"  for="title">Title</label>
         <textarea class="form-control" placeholder="Leave a title" name="title" id="title" type="text" minlength="5" maxlength="50"></textarea>
-        <br><br>
-        <label for="message">Message</label><br>
-        <textarea class="form-control" placeholder="Leave a message"  name="message" id="message" rows="4" cols="50" type="text" minlength="5" maxlength="50"></textarea>
-         <p></p>
+        <label class="input-group-text" for="message">Message</label>
+        <textarea class="form-control" placeholder="Leave a message"  name="message" id="message" rows="4" cols="50" type="text" minlength="5" maxlength="50"></textarea><br>
             <button class="btn btn-outline-primary" type="submit" value="Submit">Add new question</button>
         </form>
     </div>
@@ -26,7 +23,6 @@
         <p></p>
     </div>
     <div class="col">
-      One of three columns
     </div>
   </div>
 {% endblock %}

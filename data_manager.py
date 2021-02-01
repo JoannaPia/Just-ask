@@ -6,7 +6,7 @@ import datetime
 import database_common
 import answers_data, questions_data
 
-headers = {"id": "Question ID", "submission_time": "Submission time", "view_number": "View number",
+headers = {"id": "ID", "submission_time": "Submission time", "view_number": "View number",
            "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
 
 class User(object):
@@ -50,17 +50,17 @@ def data_time_now():
 @database_common.connection_handler
 def add_user(cursor: RealDictCursor, email, password):
 
-    id_user = "SELECT * FROM user_data"
+    id_user = "SELECT * FROM  user_data"
     cursor.execute(id_user)
     id_user = len(cursor.fetchall())
     # hashowanie na email i password = funkcja hash ma byc dostepna lokalnie w data_manager
-    query = "INSERT INTO user_data VALUES('{}', '{}');".format(email, password)
+    query = "INSERT INTO  user_data VALUES('{}', '{}');".format(email, password)
     cursor.execute(query)
     return get_user(email)
 
 @database_common.connection_handler
 def get_user(cursor: RealDictCursor, email):
-    user = "SELECT * FROM user_data where email='{}'".format(email)
+    user = "SELECT * FROM  user_data where email='{}'".format(email)
     cursor.execute(user)
 
     return cursor.fetchone()
@@ -69,10 +69,35 @@ def get_user(cursor: RealDictCursor, email):
 def get_login(cursor: RealDictCursor, email, password):
     print(email)
     print(password)
-    user = "SELECT * FROM user_data WHERE email='{}' AND password='{}'".format(email, password)
+    user = "SELECT * FROM  user_data WHERE email='{}' AND password='{}'".format(email, password)
     cursor.execute(user)
 
     return cursor.fetchone()
+
+@database_common.connection_handler
+def get_user_data(cursor: RealDictCursor, user_email):
+    query = """ 
+    SELECT *
+    FROM user_data
+    WHERE email = %(email)s
+    """
+    param = {
+        'email': user_email
+    }
+    cursor.execute(query, param)
+    user_data = cursor.fetchall()
+    return user_data
+
+
+@database_common.connection_handler
+def get_users_data(cursor: RealDictCursor):
+    query = """ 
+    SELECT *
+    FROM user_data
+    """
+    cursor.execute(query)
+    users_data = cursor.fetchall()
+    return users_data
 
 @database_common.connection_handler
 def delete_comment_to_answer(cursor: RealDictCursor, answer_id):
@@ -109,7 +134,7 @@ def delete_one_comment(cursor: RealDictCursor, comment_id, answer_id):
 def delete_one_comment_q(cursor: RealDictCursor, comment_q_id, question_id):
     q_id = questions_data.get_question_id(question_id)
     command_comment = """
-        DELETE from comment where question_id=%(question_id)s and id=%(comment_q_id)s
+        DELETE from comment_q where question_id=%(question_id)s and id=%(comment_q_id)s
         """
     param_comment = {
             "comment_q_id": comment_q_id,
@@ -151,6 +176,20 @@ def save_comment_answer(cursor: RealDictCursor, answer_id, message):
     cursor.execute(query)
     return question_id
 
+@database_common.connection_handler
+def save_edit_comment(cursor: RealDictCursor, answer_id, message):
+    command = """
+        UPDATE comment 
+        SET message = (%(message)s)
+        WHERE id=%(answer_id)s 
+        """
+    param = {
+        'message': str(message),
+        'answer_id': str(answer_id)
+    }
+    cursor.execute(command, param)
+    q_id = answers_data.get_answer_question_id(answer_id)
+    return q_id
 
 @database_common.connection_handler
 def get_comments(cursor: RealDictCursor, question_id):
@@ -166,7 +205,7 @@ def get_comments(cursor: RealDictCursor, question_id):
 
 
 @database_common.connection_handler
-def save_comment_question(cursor: RealDictCursor, question_id, message):
+def save_comment_q_question(cursor: RealDictCursor, question_id, message):
     query_max_id = """
                     SELECT MAX(id) FROM comment_q
                     """
@@ -313,29 +352,3 @@ def delete_tag_from_question(cursor: RealDictCursor, question_id, tag_id):
     }
     cursor.execute(command, param)
     return None
-
-
-@database_common.connection_handler
-def get_user_data(cursor: RealDictCursor, user_email):
-    query = """ 
-    SELECT *
-    FROM user_data
-    WHERE email = %(email)s
-    """
-    param = {
-        'email': user_email
-    }
-    cursor.execute(query, param)
-    user_data = cursor.fetchall()
-    return user_data
-
-
-@database_common.connection_handler
-def get_users_data(cursor: RealDictCursor):
-    query = """ 
-    SELECT *
-    FROM user_data
-    """
-    cursor.execute(query)
-    users_data = cursor.fetchall()
-    return users_data

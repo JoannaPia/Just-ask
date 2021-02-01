@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="container">
+<tr class="container">
     <div class="row justify-content-center" >
         <p></p>
         <div class="row justify-content-center">
-                    <div class="col-6 justify-content-center">
+                    <div class="col-6 justify-content-center" style="text-align: center">
                         <a href="{{ url_for("add_question") }}" style="text-align: center"><button type="submit" class="btn btn-outline-primary">Add new question</button></a>
                     </div>
-                    <div class="col-6 justify-content-center">
+                    <div class="col-6 justify-content-center" style="text-align: center">
                     <a href="{{ url_for("list") }}" ><button type="submit" class="btn btn-outline-primary">List all question</button></a>
                     </div>
         </div>
     </div>
 <div class="container">
-<table class="table table-hover table-dark">
+<table class="table table-hover" class="p-3 mb-2 bg-white text-dark ">
     <thead>
     <tr>
         {% for header in headers %}
@@ -68,12 +68,12 @@
             </th>
         </tr>
         <tr>
-            <div id="comment_q{{ question['id'] }}" style='display:none;'>
-                       <form action="{{ url_for('save_comment_question', question_id=question['id']) }}" method="POST">
-                            <label for="message">Comment:</label><br>
-                            <textarea name="message" id="message" minlength="3" rows="4" cols="50" maxlength="500"></textarea>
-                            <br><br>
-                            <button class="btn btn-outline-primary" type="submit" value="Submit">Add comment_q</button>
+        <br>
+            <div class="col-4" id="comment_q{{ question['id'] }}" style='display:none;'>
+                       <form action="{{ url_for('save_comment_q_question', question_id=question['id']) }}" method="POST">
+                            <label class="input-group-text" for="message">Share</label>
+                            <textarea placeholder="Share your thoughts" class="form-control" name="message" id="message" minlength="3" rows="4" cols="50" maxlength="500"></textarea>
+                            <button class="btn btn-outline-primary" type="submit" value="Submit">Share</button>
                        </form>
             </div>
             <div id="comments_q{{ question['id'] }}" style='display:none;'>
@@ -85,9 +85,9 @@
                             </th>
                             <th scope="col">
                                 <a href="{{ url_for("delete_one_comment_q", question_id=question["id"], comment_q_id=comment_q["id"]) }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                                                </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                    </svg>
                                 </a>
                             </th>
                         </tr>
