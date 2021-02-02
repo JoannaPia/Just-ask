@@ -42,7 +42,7 @@ def get_answer(cursor: RealDictCursor, answer_id):
 
 
 @database_common.connection_handler
-def add_answer(cursor: RealDictCursor, sub, vote_n, question_id, mess, image):
+def add_answer(cursor: RealDictCursor, sub, vote_n, question_id, mess, image, user_id, accepted):
     query_max_id = """
                 SELECT MAX(id) FROM answer
                 """
@@ -53,7 +53,7 @@ def add_answer(cursor: RealDictCursor, sub, vote_n, question_id, mess, image):
     else:
         nid = 1
     query = "INSERT INTO answer " \
-            "VALUES ({},'{}',{},{},'{}','{}')".format(nid + 1, sub, vote_n, question_id, mess, image)
+            "VALUES ({},'{}',{},{},'{}','{}',{},'{}')".format(nid + 1, sub, vote_n, question_id, mess, image, user_id, accepted)
     cursor.execute(query)
     return nid + 1
 

@@ -53,14 +53,19 @@ def data_time_now():
     data_string = f"{now.year}-{now.month}-{now.day} {now.hour}:{now.minute}"
     return data_string
 
+def date_now():
+    now = datetime.datetime.now()
+    data_string = f"{now.year}/{now.month}/{now.day}"
+    return data_string
+
 @database_common.connection_handler
-def add_user(cursor: RealDictCursor, email, password):
+def add_user(cursor: RealDictCursor, email, password, date, name):
 
     id_user = "SELECT * FROM  user_data"
     cursor.execute(id_user)
     id_user = len(cursor.fetchall())
     # hashowanie na email i password = funkcja hash ma byc dostepna lokalnie w data_manager
-    query = "INSERT INTO  user_data VALUES('{}', '{}');".format(email, password)
+    query = "INSERT INTO  user_data VALUES('{}', '{}','{}','{}');".format(email, password, date, name)
     cursor.execute(query)
     return get_user(email)
 
@@ -399,4 +404,88 @@ def delete_tag_from_question(cursor: RealDictCursor, question_id, tag_id):
         "tag_id": str(tag_id)
     }
     cursor.execute(command, param)
+    return None
+
+@database_common.connection_handler
+def get_id_user(cursor:RealDictCursor, email):
+    query = """
+    SELECT id
+    FROM user_data
+    WHERE email = %(email)s
+    """
+    param = {
+        'email': email
+    }
+    cursor.execute(query, param)
+    id_user = cursor.fetchone()
+    print("a")
+    return id_user
+
+
+@database_common.connection_handler
+def add_to_question_counter(cursor: RealDictCursor, email):
+    query = """
+    UPDATE user_data
+    SET count_of_asked_questions = count_of_asked_questions + 1
+    WHERE email = %(email)s    
+    """
+    param = {
+        'email': email
+    }
+    cursor.execute(query, param)
+    return None
+
+
+@database_common.connection_handler
+def add_to_answer_counter(cursor: RealDictCursor, email):
+    query = """
+    UPDATE user_data
+    SET count_of_answers = count_of_answers + 1
+    WHERE email = %(email)s    
+    """
+    param = {
+        'email': email
+    }
+    cursor.execute(query, param)
+    return None
+
+@database_common.connection_handler
+def add_to_reputation(cursor: RealDictCursor, email, entry_type):
+    if entry_type == 'answer':
+        bonus = 10
+    elif entry_type == 'accepted':
+        bonus = 15
+    else:
+        bonus = 5
+    query = """
+    UPDATE user_data
+    SET reputation = user_data.reputation + %(bonus)s
+    WHERE email = %(email)s
+    """
+    param = {
+        'email': email,
+        'bonus': bonus
+    }
+    cursor.execute(query, param)
+    return None
+
+
+@database_common.connection_handler
+def subtract_to_reputation(cursor: RealDictCursor, email, entry_type):
+    if entry_type == 'answer':
+        bonus = 10
+    elif entry_type == 'accepted':
+        bonus = 15
+    else:
+        bonus = 5
+    query = """
+    UPDATE user_data
+    SET reputation = user_data.reputation - %(bonus)s
+    WHERE email = %(email)s
+    """
+    param = {
+        'email': email,
+        'bonus': bonus
+    }
+    cursor.execute(query, param)
     return None

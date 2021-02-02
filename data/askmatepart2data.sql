@@ -22,10 +22,13 @@ create table user_data (
     password                 text,
     registration_date        date,
     user_name                text,
-    count_of_asked_questions integer,
-    count_of_answers         integer,
-    count_of_comments        integer,
-    reputation               integer
+    count_of_asked_questions integer default 0,
+    count_of_answers         integer default 0,
+    count_of_comments        integer default 0,
+    reputation               integer default 0,
+    id                       serial not null
+        constraint user_data_pk
+            primary key
 );
 
 DROP TABLE IF EXISTS public.question;

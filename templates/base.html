@@ -23,10 +23,10 @@
               <a class="nav-link active" aria-current="page" href="{{ url_for("list") }}">Home</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="#">Users list</a>
+               <a class="nav-link" href="{{ url_for("users_list") }}">Users list</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">User page</a>
+              <a class="nav-link" href="{{ url_for("user_page", email=session.email) }}">User page</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">...</a>
