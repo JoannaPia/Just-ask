@@ -9,13 +9,14 @@ import sort
 from flask_login import LoginManager, login_user, logout_user, login_required
 
 HEADERS_PRINT = {"id": "Id", "submission_time": "Time", "view_number": "View number",
-                 "vote_number": "Vote", "title": "Title", "message": "Message", "image": "Image"}
-QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+                 "vote_number": "Vote", "title": "Title", "message": "Message", "image": "Image",
+                 "user_id": "Author`s ID"}
+QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image", "user_id"]
+ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image", "user_id", "accepted"]
 USERS_DATA_HEADERS = {
-    'email': 'Email', 'password': 'Password', 'registration_date': 'Registration date',
+    'email': 'Email', 'password': 'Password', 'registration_date': 'Registration date', 'user_name': 'User name',
     'count_of_asked_questions': 'Count of asked questions', 'count_of_answers': 'Count of answers',
-    'count_of_comments': 'Count of comments', 'reputation': 'Reputation'
+    'count_of_comments': 'Count of comments', 'reputation': 'Reputation', 'id': 'User ID'
 }
 
 
@@ -54,7 +55,9 @@ def add_question():
 def save_question():
     title = request.form['title']
     message = request.form['message']
-    id = questions_data.add_question(data_manager.data_time_now(), '0', '0', title, message, str(0))
+    user_id = data_manager.get_id_user(session['email'])
+    id = questions_data.add_question(data_manager.data_time_now(), '0', '0', title, message, str(0), user_id['id'])
+    data_manager.add_to_question_counter(session['email'])
     return redirect(url_for('display_question', question_id=id))
 
 
@@ -76,7 +79,9 @@ def display_question(question_id):
 @app.route('/save_answer/<int:q_id>', methods=['POST'])
 def save_answer(q_id):
     message = request.form['message']
-    answers_data.add_answer(data_manager.data_time_now(), '0', q_id, message, str(0))
+    user_id = data_manager.get_id_user(session['email'])
+    answers_data.add_answer(data_manager.data_time_now(), '0', q_id, message, str(0), user_id['id'],'no')
+    data_manager.add_to_answer_counter(session['email'])
     return redirect(url_for('display_question', question_id=q_id))
 
 
@@ -104,12 +109,14 @@ def delete_comment_to_answer(answer_id):
 @app.route('/<int:answer_id>/vote-up')
 def vote_up_answers(answer_id):
     question_id = answers_data.vote_up_answer(answer_id)
+    data_manager.add_to_reputation(session['email'], 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/<int:answer_id>/vote-down')
 def vote_down_answers(answer_id):
     question_id = answers_data.vote_down_answer(answer_id)
+    data_manager.subtract_to_reputation(session['email'], 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -185,6 +192,7 @@ def upload_image_answer(answer_id, question_id):
 def vote_up_on_question(question_id, table):
     if table == "question":
         questions_data.vote_up_question(item_id=question_id)
+        data_manager.add_to_reputation(session['email'], 'question')
     return redirect(url_for('list'))
 
 
@@ -192,6 +200,7 @@ def vote_up_on_question(question_id, table):
 def vote_down_on_question(question_id, table):
     if table == "question":
         questions_data.vote_down_question(item_id=question_id)
+        data_manager.subtract_to_reputation(session['email'], 'question')
     return redirect(url_for('list'))
 
 
@@ -265,14 +274,16 @@ def register():
     if request.method == 'GET':
         return render_template('registration.html')
     if request.method == 'POST':
-        #name = request.form['name']
+        name = request.form['name']
         #surname = request.form['surname']
         login = request.form['login']
         password = request.form['password']
         #resp = make_response(redirect(url_for('index')))
         #resp.set_cookie('userName', login)
-        user = data_manager.add_user(login, password)
+        date_now = data_manager.date_now()
+        user = data_manager.add_user(login, password, date_now, name)
         login_user(data_manager.User(user))
+        session['email'] = login
         return redirect(url_for('index'))
 
 
