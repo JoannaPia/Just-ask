@@ -138,11 +138,27 @@ def delete_one_comment_q(comment_q_id, question_id):
     q_id = data_manager.delete_one_comment_q(comment_q_id, question_id)
     return redirect(url_for('index', question_id=q_id))
 
-@app.route('/comment/<int:answer_id>/save_edit_comment', methods=['POST'])
-def save_edit_comment(answer_id):
+@app.route('/<int:comment_id>/<int:answer_id>/edit_comment')
+def edit_comment(comment_id, answer_id):
+    comment = data_manager.get_comment(comment_id)
+    return render_template('edit_comment.html', comment=comment, answer_id=answer_id)
+
+@app.route('/<int:comment_id>/<int:answer_id>/save_edit_comment', methods=['POST'])
+def save_edit_comment(comment_id, answer_id):
     message = request.form['message']
-    q_id = data_manager.save_edit_comment(answer_id, message)
+    q_id = data_manager.save_edit_comment(comment_id, answer_id, message)
     return redirect(url_for('display_question', question_id=q_id))
+
+@app.route('/<int:comment_q_id>/<int:question_id>/edit_comment_q')
+def edit_comment_q(comment_q_id, question_id):
+    comment_q = data_manager.get_comment_q(comment_q_id)
+    return render_template('edit_comment_q.html', comment_q=comment_q, question_id=question_id)
+
+@app.route('/<int:comment_q_id>/<int:question_id>/save_edit_comment_q', methods=['POST'])
+def save_edit_comment_q(comment_q_id, question_id):
+    message = request.form['message']
+    q_id = data_manager.save_edit_comment_q(comment_q_id, question_id, message)
+    return redirect(url_for('index', question_id=q_id))
 
 
 @app.route('/answer/<int:answer_id>/edit', methods=['GET'])
@@ -249,8 +265,8 @@ def register():
     if request.method == 'GET':
         return render_template('registration.html')
     if request.method == 'POST':
-        name = request.form['name']
-        surname = request.form['surname']
+        #name = request.form['name']
+        #surname = request.form['surname']
         login = request.form['login']
         password = request.form['password']
         #resp = make_response(redirect(url_for('index')))
@@ -278,7 +294,7 @@ def login():
         #password = request.args.get('password')
         email = request.form['email']
         password = request.form['password']
-        # autentykacja
+        # autentykacja - hashowanie i tokeny
         user = data_manager.get_login(email, password)
         print(user)
         print(email)

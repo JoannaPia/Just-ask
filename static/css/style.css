@@ -13,13 +13,3 @@ body {
 .form-control{
   width: 200px;
 }
-div.copy
-{
-
-  position: absolute;
-  bottom: 0;
-  width: 90%;
-  min-height: 75rem;
-  padding-top: 4.5rem;
-  height: 2.5rem;            /* Footer height */
-}

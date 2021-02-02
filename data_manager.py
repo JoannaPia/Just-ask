@@ -22,6 +22,12 @@ class User(object):
         self.email = user['email']
         self.password = user['password']
         self.authenticated = True
+        self.user_name = user['user_name']
+        self.count_of_asked_questions = user['count_of_asked_questions']
+        self.count_of_answers = user['count_of_answers']
+        self.count_of_comments = user['count_of_comments']
+        self.reputation = user['reputation']
+
 
 
     def is_active(self):
@@ -177,18 +183,37 @@ def save_comment_answer(cursor: RealDictCursor, answer_id, message):
     return question_id
 
 @database_common.connection_handler
-def save_edit_comment(cursor: RealDictCursor, answer_id, message):
+def save_edit_comment(cursor: RealDictCursor, comment_id, answer_id, message):
     command = """
         UPDATE comment 
         SET message = (%(message)s)
-        WHERE id=%(answer_id)s 
+        WHERE answer_id=%(answer_id)s 
+        AND id=%(comment_id)s
         """
     param = {
         'message': str(message),
-        'answer_id': str(answer_id)
+        'answer_id': str(answer_id),
+        'comment_id': str(comment_id)
     }
     cursor.execute(command, param)
     q_id = answers_data.get_answer_question_id(answer_id)
+    return q_id
+
+@database_common.connection_handler
+def save_edit_comment_q(cursor: RealDictCursor, comment_q_id, question_id, message):
+    command = """
+        UPDATE comment_q 
+        SET message = (%(message)s)
+        WHERE question_id=%(question_id)s 
+        AND id=%(comment_q_id)s
+        """
+    param = {
+        'message': str(message),
+        'question_id': str(question_id),
+        'comment_q_id': str(comment_q_id)
+    }
+    cursor.execute(command, param)
+    q_id = questions_data.get_question_id(question_id)
     return q_id
 
 @database_common.connection_handler
@@ -203,6 +228,29 @@ def get_comments(cursor: RealDictCursor, question_id):
     com_dict = cursor.fetchall()
     return com_dict
 
+@database_common.connection_handler
+def get_comment(cursor: RealDictCursor, comment_id):
+    query = """
+       SELECT * from comment WHERE id = %(comment_id)s
+       """
+    params = {
+        'comment_id': comment_id
+    }
+    cursor.execute(query, params)
+    com_dict = cursor.fetchone()
+    return com_dict
+
+@database_common.connection_handler
+def get_comment_q(cursor: RealDictCursor, comment_q_id):
+    query = """
+       SELECT * from comment_q WHERE id = %(comment_q_id)s
+       """
+    params = {
+        'comment_q_id': comment_q_id
+    }
+    cursor.execute(query, params)
+    com_dict = cursor.fetchone()
+    return com_dict
 
 @database_common.connection_handler
 def save_comment_q_question(cursor: RealDictCursor, question_id, message):
