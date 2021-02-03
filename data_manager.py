@@ -62,7 +62,7 @@ def date_now():
     return data_string
 
 @database_common.connection_handler
-def add_user(cursor: RealDictCursor, email, password):
+def add_user(cursor: RealDictCursor, email, password, user_name):
 
     id_user = "SELECT * FROM  user_data"
     cursor.execute(id_user)
@@ -71,8 +71,8 @@ def add_user(cursor: RealDictCursor, email, password):
     #id_user += 1
     pw = password.decode('UTF-8')
     # hashowanie na email i password = funkcja hash ma byc dostepna lokalnie w data_manager
-    query = "INSERT INTO user_data (email, registration_date, password) \
-    VALUES ('{}','{}', '{}');".format(email, data_time_now(), pw)
+    query = "INSERT INTO user_data (email, registration_date, password, user_name) \
+    VALUES ('{}','{}', '{}','{}');".format(email, data_time_now(), pw, user_name)
     cursor.execute(query)
     return get_user(email)
 

@@ -11,12 +11,12 @@ from flask_login import LoginManager, login_user, logout_user, login_required
 
 HEADERS_PRINT = {"id": "Id", "submission_time": "Time", "view_number": "View number",
                  "vote_number": "Vote", "title": "Title", "message": "Message", "user_id": "Author", "image": "Image"}
-QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image", "user_id"]
+QUESTIONS_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "user_id", "image"]
 ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image", "user_id", "accepted"]
 USERS_DATA_HEADERS = {
-    'Email': 'Email', 'Password': 'Password', 'Registration date': 'Registration date',
+    'Email': 'Email', 'Password': 'Password', 'Registration date': 'Registration date','User_name': 'User name',
     'Count of asked questions': 'Count of asked questions', 'Count of answers': 'Count of answers',
-    'Count of comments': 'Count of comments', 'Reputation': 'Reputation','User ID': 'User ID'
+    'Count of comments': 'Count of comments', 'Reputation': 'Reputation'
 }
 
 
@@ -55,7 +55,8 @@ def add_question():
 def save_question():
     title = request.form['title']
     message = request.form['message']
-    id = questions_data.add_question(data_manager.data_time_now(), '0', '0', title, message, str(0))
+    id = questions_data.add_question(data_manager.data_time_now(), '0', '0', title, message, str(0), session['email'])
+    data_manager.add_to_question_counter(session['email'])
     return redirect(url_for('display_question', question_id=id))
 
 
@@ -77,7 +78,8 @@ def display_question(question_id):
 @app.route('/save_answer/<int:q_id>', methods=['POST'])
 def save_answer(q_id):
     message = request.form['message']
-    answers_data.add_answer(data_manager.data_time_now(), '0', q_id, message, str(0))
+    answers_data.add_answer(data_manager.data_time_now(), '0', q_id, message, str(0), 'false', session['email'])
+    data_manager.add_to_answer_counter(session['email'])
     return redirect(url_for('display_question', question_id=q_id))
 
 
@@ -105,12 +107,14 @@ def delete_comment_to_answer(answer_id):
 @app.route('/<int:answer_id>/vote-up')
 def vote_up_answers(answer_id):
     question_id = answers_data.vote_up_answer(answer_id)
+    data_manager.add_to_reputation(session['email'], 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/<int:answer_id>/vote-down')
 def vote_down_answers(answer_id):
     question_id = answers_data.vote_down_answer(answer_id)
+    data_manager.subtract_to_reputation(session['email'], 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -186,6 +190,7 @@ def upload_image_answer(answer_id, question_id):
 def vote_up_on_question(question_id, table):
     if table == "question":
         questions_data.vote_up_question(item_id=question_id)
+        data_manager.add_to_reputation(session['email'], 'question')
     return redirect(url_for('list'))
 
 
@@ -193,6 +198,7 @@ def vote_up_on_question(question_id, table):
 def vote_down_on_question(question_id, table):
     if table == "question":
         questions_data.vote_down_question(item_id=question_id)
+        data_manager.subtract_to_reputation(session['email'], 'question')
     return redirect(url_for('list'))
 
 
@@ -266,15 +272,15 @@ def register():
     if request.method == 'GET':
         return render_template('registration.html')
     if request.method == 'POST':
-        #name = request.form['name']
+        user_name = request.form['name']
         #surname = request.form['surname']
         # validacja formularza
         login = request.form['login']
         password = bcrypt.hashpw(request.form['password'].encode('utf8'), bcrypt.gensalt(10))
         print(password)
 
-        user = data_manager.add_user(login, password)
-
+        user = data_manager.add_user(login, password, user_name)
+        session['email'] = login
         login_user(data_manager.User(user))
         return redirect(url_for('index'))
 
