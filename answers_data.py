@@ -134,3 +134,16 @@ def get_answers_id(cursor: RealDictCursor, question_id):
     param = {'question_id': question_id}
     cursor.execute(query, param)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_from_answer(cursor: RealDictCursor, answer_id):
+    query = """
+        SELECT user_id
+        From answer
+        WHERE id = %(answer_id)s;
+    """
+    param = {'answer_id': answer_id}
+    cursor.execute(query, param)
+    result = cursor.fetchone()
+    print(result)
+    return result['user_id']

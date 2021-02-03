@@ -107,14 +107,18 @@ def delete_comment_to_answer(answer_id):
 @app.route('/<int:answer_id>/vote-up')
 def vote_up_answers(answer_id):
     question_id = answers_data.vote_up_answer(answer_id)
-    data_manager.add_to_reputation(session['email'], 'answer')
+    owner_email = answers_data.get_user_from_answer(answer_id)
+    if owner_email:
+        data_manager.add_to_reputation(owner_email, 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
 @app.route('/<int:answer_id>/vote-down')
 def vote_down_answers(answer_id):
     question_id = answers_data.vote_down_answer(answer_id)
-    data_manager.subtract_to_reputation(session['email'], 'answer')
+    owner_email = answers_data.get_user_from_answer(answer_id)
+    if owner_email:
+        data_manager.subtract_to_reputation(owner_email, 'answer')
     return redirect(url_for('display_question', question_id=question_id))
 
 
@@ -190,7 +194,9 @@ def upload_image_answer(answer_id, question_id):
 def vote_up_on_question(question_id, table):
     if table == "question":
         questions_data.vote_up_question(item_id=question_id)
-        data_manager.add_to_reputation(session['email'], 'question')
+        owner_email = questions_data.get_user_from_question(question_id)
+        if owner_email:
+            data_manager.add_to_reputation(owner_email, 'question')
     return redirect(url_for('list'))
 
 
@@ -198,7 +204,9 @@ def vote_up_on_question(question_id, table):
 def vote_down_on_question(question_id, table):
     if table == "question":
         questions_data.vote_down_question(item_id=question_id)
-        data_manager.subtract_to_reputation(session['email'], 'question')
+        owner_email = questions_data.get_user_from_question(question_id)
+        if owner_email:
+            data_manager.subtract_to_reputation(owner_email, 'question')
     return redirect(url_for('list'))
 
 
@@ -316,7 +324,7 @@ def login():
                 return redirect(url_for('index'))
 
         error = "Login failed"
-        return render_template('login.html', error=error)
+    return render_template('login.html', error=error)
 
 @app.route('/logout')
 @login_required

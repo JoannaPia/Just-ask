@@ -134,3 +134,16 @@ def get_five_questions(cursor: RealDictCursor) -> dict:
     cursor.execute(query)
     questions = cursor.fetchall()
     return questions
+
+@database_common.connection_handler
+def get_user_from_question(cursor: RealDictCursor, question_id):
+    query = """
+        SELECT user_id
+        From question
+        WHERE id = %(question_id)s;
+    """
+    param = {'question_id': question_id}
+    cursor.execute(query, param)
+    result = cursor.fetchone()
+    print(result)
+    return result['user_id']
