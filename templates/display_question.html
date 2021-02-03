@@ -19,18 +19,17 @@
          {%  endfor %}
   </thead>
   <tbody>
-      {% for header in headers %}
+       {% for header in headers %}
                 <th>
                     {% if header == "image" %}
                         {#\   <img  src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100"> #}
                     {% else %}
                         {{ question[header] }}
-                </th>
                     {% endif %}
-        {%  endfor %}
+                        {%  endfor %}
                     <form style="text-align: left" class="form-control" id="upload_image_question" action="" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="file" accept="image/*" class="btn btn-outline-primary">
-                    <input  type="submit" value="Attach an image" class="btn btn-outline-primary">
+                        <input type="file" name="file" accept="image/*" class="btn btn-outline-primary">
+                        <input  type="submit" value="Attach an image" class="btn btn-outline-primary">
                     </form>
         </table>
     </div>
@@ -112,6 +111,13 @@
                         </th>
                         {% endfor %}
                         <br>
+                       <th>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
+                          <label class="form-check-label" for="flexCheckIndeterminate">
+                          </label>
+                        </div>
+                       </th>
 
                         <th>
                             <a href="{{ url_for("edit_answer",answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit" >Update answer</button></a>
@@ -185,6 +191,14 @@
      </div>
            <a href="{{ url_for("list" ) }}"><button class="btn btn-outline-primary">Back</button></a>
             <br><br>
+<div class="row" style="position: fixed; left:20px; bottom: 5px " class="p-3 mb-2 bg-light text-dark">
+        <div class="col-6" class="p-3 mb-2 bg-light text-dark">
+            <p>&copy; Just ask! 2021 &middot; <a >Creators J. Piasecka, W. Dziadoń, A. Kuza</a> &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        </div>
+        <div class="col-6">
+            <p class="float-end" style="text-align: right"><a href="#">Back to top</a><p>
+        </div>
+</div>
 
 {% endblock %}
 

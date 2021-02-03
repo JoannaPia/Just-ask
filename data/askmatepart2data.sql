@@ -18,17 +18,15 @@ ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_
 
 DROP TABLE IF EXISTS public.user_data;
 create table user_data (
-    email                    text,
+    email                    text PRIMARY KEY,
     password                 text,
     registration_date        date,
     user_name                text,
     count_of_asked_questions integer default 0,
     count_of_answers         integer default 0,
     count_of_comments        integer default 0,
-    reputation               integer default 0,
-    id                       serial not null
-        constraint user_data_pk
-            primary key
+    reputation               integer default 0
+
 );
 
 DROP TABLE IF EXISTS public.question;
@@ -39,7 +37,9 @@ CREATE TABLE question (
     vote_number integer,
     title text,
     message text,
-    image text
+    image text,
+    user_id integer
+
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -49,7 +49,10 @@ CREATE TABLE answer (
     vote_number integer,
     question_id integer,
     message text,
-    image text
+    image text,
+    accepted boolean,
+    user_id integer
+
 );
 
 DROP TABLE IF EXISTS public.comment;
@@ -60,6 +63,7 @@ CREATE TABLE comment (
     message text,
     submission_time timestamp without time zone,
     edited_count integer
+
 );
 
 DROP TABLE IF EXISTS public.comment_q;
@@ -84,8 +88,6 @@ CREATE TABLE tag (
     name text
 );
 
-ALTER TABLE ONLY user_data
-      ADD CONSTRAINT pk_user_id PRIMARY KEY (email);
 
 ALTER TABLE ONLY answer
     ADD CONSTRAINT pk_answer_id PRIMARY KEY (id);

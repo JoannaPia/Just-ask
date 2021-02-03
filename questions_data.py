@@ -22,7 +22,7 @@ def add_question(cursor: RealDictCursor, sub, view_n, vote_n, title, mess, image
     new_id = cursor.fetchone()
     nid = new_id['max']
     query = "INSERT INTO question " \
-            "VALUES ({},'{}',{},{},'{}','{}','{}',{})".format(nid+1, sub, view_n, vote_n, title, mess, image, user_id)
+           "VALUES ({},'{}',{},{},'{}','{}','{}',{})".format(nid+1, sub, view_n, vote_n, title, mess, image, user_id)
     cursor.execute(query)
     return nid+1
 

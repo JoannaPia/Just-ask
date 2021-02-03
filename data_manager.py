@@ -5,6 +5,7 @@ from psycopg2.extras import RealDictCursor, DictCursor
 import datetime
 import database_common
 import answers_data, questions_data
+import bcrypt
 
 headers = {"id": "ID", "submission_time": "Submission time", "view_number": "View number",
            "vote_number": "Vote number", "title": "Title", "message": "Message", "image": "Image"}
@@ -20,14 +21,16 @@ class User(object):
 
     def __init__(self, user):
         self.email = user['email']
-        self.password = user['password']
         self.authenticated = True
         self.user_name = user['user_name']
         self.count_of_asked_questions = user['count_of_asked_questions']
         self.count_of_answers = user['count_of_answers']
         self.count_of_comments = user['count_of_comments']
         self.reputation = user['reputation']
+        self.password_hash = user['password']
 
+    def password(self, password):
+        return bcrypt.checkpw(password.encode('UTF-8'), self.password_hash.encode('UTF-8'))
 
 
     def is_active(self):
@@ -59,13 +62,17 @@ def date_now():
     return data_string
 
 @database_common.connection_handler
-def add_user(cursor: RealDictCursor, email, password, date, name):
+def add_user(cursor: RealDictCursor, email, password):
 
     id_user = "SELECT * FROM  user_data"
     cursor.execute(id_user)
-    id_user = len(cursor.fetchall())
+    print(cursor.fetchall())
+    #id_user = len(cursor.fetchall())
+    #id_user += 1
+    pw = password.decode('UTF-8')
     # hashowanie na email i password = funkcja hash ma byc dostepna lokalnie w data_manager
-    query = "INSERT INTO  user_data VALUES('{}', '{}','{}','{}');".format(email, password, date, name)
+    query = "INSERT INTO user_data (email, registration_date, password) \
+    VALUES ('{}','{}', '{}');".format(email, data_time_now(), pw)
     cursor.execute(query)
     return get_user(email)
 

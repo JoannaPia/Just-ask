@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title style="color: darkgoldenrod">Just ask!</title>
+    <link rel="icon" href="../static/css/style.css" type="icon">
     <script type = "text/javascript"
          src = "{{ url_for('static', filename = 'comment_question.js') }}">
     </script>
@@ -11,8 +12,8 @@
 </head>
 <body style="min-height: 75rem; padding-top: 4.5rem;" class="p-3 mb-2 bg-white text-dark ">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-     <div class="container-fluid"  class="shadow p-3 mb-5 bg-white rounded">
-         <img  width="69" height="69" class="navbar-brand" src="../static/logo.png" alt="logo" />
+     <div class="container-fluid" >
+         <img style="position: center;" width="69" height="69" class="navbar-brand"  src="../static/logo.png" alt="logo" />
          <a class="navbar-brand" href="#">Just ask!</a>
          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -26,7 +27,7 @@
                <a class="nav-link" href="{{ url_for("users_list") }}">Users list</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for("user_page", email=session.email) }}">User page</a>
+             <a class="nav-link" href="{{ url_for("user_page", email=session.email) }}">User page</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">...</a>
@@ -63,14 +64,6 @@
 
 {% block body %}
 {% endblock %}
-<!--
-</br>
-<div>
- <footer>
-    <p  class="float-end"><a href="#">Back to top</a><p><p></p>
-    <p>&copy; Just ask! 2021 &middot; <a >Creators J. Piasecka, W. Dziadoń, A. Kuza</a> &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
- </footer>
-</div>
--->
+
 </body>
 </html>
