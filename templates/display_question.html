@@ -22,12 +22,15 @@
        {% for header in headers %}
                 <th>
                     {% if header == "image" %}
-                        <img src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100">
+                        {#\   <img  src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100"> #}
                     {% else %}
                         {{ question[header] }}
                     {% endif %}
                         {%  endfor %}
-                </th>
+                    <form style="text-align: left" class="form-control" id="upload_image_question" action="" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="file" accept="image/*" class="btn btn-outline-primary">
+                        <input  type="submit" value="Attach an image" class="btn btn-outline-primary">
+                    </form>
         </table>
     </div>
     <br>
@@ -41,12 +44,6 @@
         <th scope="col">
         <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Your answer</button></a>
         </th>
-            <form style="text-align: left" id="upload_image_question" action="{{ url_for('upload_image_question', question_id=question["id"]) }}" method="POST" enctype="multipart/form-data" class="btn btn-outline-primary">
-                <label for="file" style="cursor: pointer;">Attach image -</label>
-                <input type="file" name="file" id="file" accept="image/*" style="display: none">
-                <label for="image" style="cursor: pointer;">> Confirm</label>
-                <input type="image" id="image" class="btn btn-outline-primary" style="display: none">
-            </form>
     </div>
         <p></p>
        <div class="col-12">
@@ -76,8 +73,9 @@
     <div>
         <h1 style="text-align: center"><span color="black">Just share!</span></h1>
         {% if answers == [] %}
-            There are no answers to this question yet
+            It's seems that nobody share... Be patience! :)
     </div>
+            <p></p>
         {% else %}
         <table class="table table-hover" class="p-3 mb-2 bg-white text-dark ">
             <thead>
@@ -115,13 +113,21 @@
                         {% endfor %}
                         <br>
                        <th>
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-                          <label class="form-check-label" for="flexCheckIndeterminate">
-                          </label>
-                        </div>
+                       <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
                        </th>
-
+                      <th>
+                       <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clipboard-x" viewBox="0 0 16 16">
+                              <path fill-rule="evenodd" d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708z"/>
+                              <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                              <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                       </th>
                         <th>
                             <a href="{{ url_for("edit_answer",answer_id=answer["id"]) }}"><button class="btn btn-outline-primary" type="submit" >Update answer</button></a>
                         </th>

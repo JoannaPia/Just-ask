@@ -69,11 +69,10 @@ def display_question(question_id):
     tags = data_manager.get_tags(question_id)
     for tag in tags:
         tags_name.append(data_manager.get_tags_name(tag["tag_id"]))
-    image_names = os.listdir(app.config['UPLOAD_FOLDER'])
-    question_image_name = data_manager.return_question_image_name(image_names, question_id)
+
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
                             answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
-                           comments=comments, tags_name=tags_name, question_image_name=question_image_name)
+                           comments=comments, tags_name=tags_name)
 
 
 @app.route('/save_answer/<int:q_id>', methods=['POST'])
@@ -184,26 +183,6 @@ def save_edit_answer(answer_id):
     message = request.form['message']
     q_id = answers_data.save_edit_answer(answer_id, message)
     return redirect(url_for('display_question', question_id=q_id))
-
-@app.route('/question/<question_id>/upload-image', methods=['POST'])
-def upload_image_question(question_id):
-    file = request.files['file']
-    try:
-        extension = file.filename.split(".")[-1]
-        remove_file_name = "question" + question_id + "." + extension
-        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], remove_file_name))
-    except:
-        pass
-    name = file.filename
-    extension = name.split(".")[-1]
-    file_name = "question"+question_id+"."+extension
-    file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
-    return redirect(url_for('display_question', question_id=question_id))
-
-
-@app.route('/question/<question_id>/delete-image', methods=['POST'])
-def delete_image_question(question_id):
-        pass
 
 
 @app.route('/<int:answer_id>/vote-down')
@@ -316,6 +295,7 @@ def register():
 
 @login_manager.user_loader
 def load_user(user_id):
+
     user = data_manager.get_user(user_id)
     if user:
         User = data_manager.User(user)
@@ -332,10 +312,12 @@ def login():
         #password = request.args.get('password')
         email = request.form['email']
         # autentykacja - hashowanie i tokeny
-        user = data_manager.get_user_data(email)
-
+        user = data_manager.get_login(email)
+        print(user)
+        print(email)
         if user:
             user = data_manager.User(user)
+            session['email'] = email
             print(user.password_hash)
 
             # sprawdzenie hashu
@@ -384,4 +366,3 @@ if __name__ == '__main__':
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.run(debug=True)
-

@@ -38,7 +38,7 @@ CREATE TABLE question (
     title text,
     message text,
     image text,
-    user_id integer
+    user_id text
 
 );
 
@@ -51,7 +51,7 @@ CREATE TABLE answer (
     message text,
     image text,
     accepted boolean,
-    user_id integer
+    user_id text
 
 );
 
