@@ -496,3 +496,10 @@ def subtract_to_reputation(cursor: RealDictCursor, email, entry_type):
     }
     cursor.execute(query, param)
     return None
+
+def return_question_image_name(image_names, question_id):
+    question_image_name = "0"
+    for name in image_names:
+        if str(question_id) in name:
+            question_image_name = name
+    return question_image_name

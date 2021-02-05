@@ -69,10 +69,11 @@ def display_question(question_id):
     tags = data_manager.get_tags(question_id)
     for tag in tags:
         tags_name.append(data_manager.get_tags_name(tag["tag_id"]))
-
+    image_names = os.listdir(app.config['UPLOAD_FOLDER'])
+    question_image_name = data_manager.return_question_image_name(image_names, question_id)
     return render_template("display_question.html", headers=QUESTIONS_HEADERS, question=question,
                             answers_headers=ANSWERS_HEADERS, answers=answers, headers_print=HEADERS_PRINT,
-                           comments=comments, tags_name=tags_name)
+                           comments=comments, tags_name=tags_name, question_image_name=question_image_name)
 
 
 @app.route('/save_answer/<int:q_id>', methods=['POST'])
@@ -184,6 +185,14 @@ def save_edit_answer(answer_id):
     q_id = answers_data.save_edit_answer(answer_id, message)
     return redirect(url_for('display_question', question_id=q_id))
 
+@app.route('/question/<question_id>/upload-image', methods=['POST'])
+def upload_image_question(question_id):
+    file = request.files['file']
+    name = file.filename
+    extension = name.split(".")[-1]
+    file_name = "question"+question_id+"."+extension
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
+    return redirect(url_for('display_question', question_id=question_id))
 
 @app.route('/<int:answer_id>/vote-down')
 def upload_image_answer(answer_id, question_id):

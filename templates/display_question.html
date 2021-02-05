@@ -22,15 +22,12 @@
        {% for header in headers %}
                 <th>
                     {% if header == "image" %}
-                        {#\   <img  src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100"> #}
+                        <img src="{{ url_for('static', filename='images/' + question_image_name) }}" alt="No image attached" width="100" height="100">
                     {% else %}
                         {{ question[header] }}
                     {% endif %}
                         {%  endfor %}
-                    <form style="text-align: left" class="form-control" id="upload_image_question" action="" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="file" accept="image/*" class="btn btn-outline-primary">
-                        <input  type="submit" value="Attach an image" class="btn btn-outline-primary">
-                    </form>
+                </th>
         </table>
     </div>
     <br>
@@ -44,6 +41,12 @@
         <th scope="col">
         <a href="{{ url_for("add_answer", question_id=question["id"]) }}"><button class="btn btn-outline-primary">Your answer</button></a>
         </th>
+            <form style="text-align: left" id="upload_image_question" action="{{ url_for('upload_image_question', question_id=question["id"]) }}" method="POST" enctype="multipart/form-data" class="btn btn-outline-primary">
+                <label for="file" style="cursor: pointer;">Attach image -</label>
+                <input type="file" name="file" id="file" accept="image/*" style="display: none">
+                <label for="image" style="cursor: pointer;">> Confirm</label>
+                <input type="image" id="image" class="btn btn-outline-primary" style="display: none">
+            </form>
     </div>
         <p></p>
        <div class="col-12">
