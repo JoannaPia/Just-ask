@@ -145,5 +145,33 @@ def get_user_from_answer(cursor: RealDictCursor, answer_id):
     param = {'answer_id': answer_id}
     cursor.execute(query, param)
     result = cursor.fetchone()
-    print(result)
     return result['user_id']
+
+
+@database_common.connection_handler
+def change_value(cursor: RealDictCursor, answer_id):
+    query = """
+        UPDATE answer
+        SET accepted = NOT accepted
+        WHERE id = %(answer_id)s
+    """
+    param = {
+        'answer_id' : answer_id
+    }
+    cursor.execute(query, param)
+    print('a')
+    return None
+
+@database_common.connection_handler
+def accepted_value(cursor: RealDictCursor, answer_id):
+    query = """
+        SELECT accepted
+        FROM answer
+        WHERE id = %(answer_id)s
+    """
+    param = {
+        'answer_id': answer_id
+    }
+    cursor.execute(query, param)
+    result = cursor.fetchone()
+    return result['accepted']

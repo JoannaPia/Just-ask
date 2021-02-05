@@ -362,6 +362,21 @@ def delete_tag_from_question(question_id, tag_name):
     return redirect(url_for('display_question', question_id=question_id))
 
 
+@app.route('/question/<question_id>/<answer_id>')
+def change_value_accept(question_id, answer_id):
+    owner_question = questions_data.get_user_from_question(question_id)
+    owner_answer = answers_data.get_user_from_answer(answer_id)
+    if owner_question == session['email']:
+        answers_data.change_value(answer_id)
+        if answers_data.accepted_value(answer_id) == True:
+            data_manager.add_to_reputation(owner_answer, 'accepted')
+        else :
+            data_manager.subtract_to_reputation(owner_answer, 'accepted')
+    else:
+        pass
+    return redirect(url_for('display_question', question_id=question_id))
+
+
 if __name__ == '__main__':
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
