@@ -188,11 +188,23 @@ def save_edit_answer(answer_id):
 @app.route('/question/<question_id>/upload-image', methods=['POST'])
 def upload_image_question(question_id):
     file = request.files['file']
+    try:
+        extension = file.filename.split(".")[-1]
+        remove_file_name = "question" + question_id + "." + extension
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], remove_file_name))
+    except:
+        pass
     name = file.filename
     extension = name.split(".")[-1]
     file_name = "question"+question_id+"."+extension
     file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
     return redirect(url_for('display_question', question_id=question_id))
+
+
+@app.route('/question/<question_id>/delete-image', methods=['POST'])
+def delete_image_question(question_id):
+        pass
+
 
 @app.route('/<int:answer_id>/vote-down')
 def upload_image_answer(answer_id, question_id):
